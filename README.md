@@ -12,6 +12,6 @@ Also funtions as a vault for old logs to see what had happened in the past.
 This program has 3 main objects:
 * Entry (the output of a single pipeline step)
 * Log (contains entries from a single pipeline run)
-* Status (the status of the pipeline - green if successful, red if failed, gray if unknown)
+* Pipeline (Info about the pipeline and the logs it contains)
 
 This program also has a simple web UI - it features only a home page for all the different types of users.

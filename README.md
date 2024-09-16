@@ -15,3 +15,10 @@ This program has 3 main objects:
 * Pipeline (Info about the pipeline and the logs it contains)
 
 This program also has a simple web UI - it features only a home page for all the different types of users.
+
+### Used technologies
+
+This project has three parts:
+1. Frontend which used React and typescript
+2. Backend which uses dotnet c#
+3. PostgreSQL database

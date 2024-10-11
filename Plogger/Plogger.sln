@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plogger.Server", "Plogger.Server\Plogger.Server.csproj", "{75FC6382-A0ED-4325-83F9-4885E5A9EFD4}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "plogger.client", "plogger.client\plogger.client.esproj", "{151BA7FB-188C-4F77-B0A4-B6EA00DBF75E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75FC6382-A0ED-4325-83F9-4885E5A9EFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FC6382-A0ED-4325-83F9-4885E5A9EFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75FC6382-A0ED-4325-83F9-4885E5A9EFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75FC6382-A0ED-4325-83F9-4885E5A9EFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{151BA7FB-188C-4F77-B0A4-B6EA00DBF75E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{151BA7FB-188C-4F77-B0A4-B6EA00DBF75E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{151BA7FB-188C-4F77-B0A4-B6EA00DBF75E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{151BA7FB-188C-4F77-B0A4-B6EA00DBF75E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{151BA7FB-188C-4F77-B0A4-B6EA00DBF75E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{151BA7FB-188C-4F77-B0A4-B6EA00DBF75E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5A67332-12DC-4368-BDCA-73835D80C275}
+	EndGlobalSection
+EndGlobal

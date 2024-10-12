@@ -55,3 +55,6 @@ ops/*.retry
 # IDE
 .idea/
 .vs/
+
+# Ignoring appsettings to keep secrets secure
+Plogger/Plogger.Server/appsettings.json

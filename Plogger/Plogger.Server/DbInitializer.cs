@@ -35,7 +35,7 @@ namespace Plogger.Server
 
             context.Pipelines.AddRange(pipelines);
 
-            var log1Id = Guid.NewGuid();
+            var log1Id = Guid.Parse("91de2713-676b-4f88-a034-270b66084671");
             var log2Id = Guid.NewGuid();
 
             var logsForPipeline1 = new Log[]
@@ -58,11 +58,14 @@ namespace Plogger.Server
 
             context.Logs.AddRange(logsForPipeline1);
 
+            var entry1Id = Guid.Parse("91de2713-676b-4f88-a034-270b62584671");
+
             // Create Entries for Log 1
             var entriesForLog1 = new Entry[]
             {
             new Entry
             {
+                Id = entry1Id,
                 Message = "Build started",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddHours(-2).AddMinutes(5),

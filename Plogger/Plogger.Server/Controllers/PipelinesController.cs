@@ -45,7 +45,7 @@ namespace Plogger.Server.Controllers
             {
                 if (log.CreatedAt < pipeline.CreatedAt)
                 {
-                    return BadRequest($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
+                    return UnprocessableEntity($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
                 }
             }
 
@@ -61,15 +61,18 @@ namespace Plogger.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpsertPipeline(Guid id, [FromBody] Pipeline pipeline)
         {
+            var existingPipeline = await _context.Pipelines.FindAsync(id);
+            if (pipeline.CreatedAt.Equals(DateTime.MinValue) && existingPipeline != null) pipeline.CreatedAt = existingPipeline.CreatedAt;
+            else if (pipeline.CreatedAt.Equals(DateTime.MinValue)) pipeline.CreatedAt = DateTime.UtcNow;
             foreach (var log in pipeline.Logs)
             {
+                Console.WriteLine(log.CreatedAt);
                 if (log.CreatedAt < pipeline.CreatedAt)
                 {
-                    return BadRequest($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
+                    return UnprocessableEntity($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
                 }
             }
 
-            var existingPipeline = await _context.Pipelines.FindAsync(id);
 
             if (existingPipeline == null)
             {

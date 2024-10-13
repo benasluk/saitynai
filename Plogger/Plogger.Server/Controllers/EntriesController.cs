@@ -60,6 +60,7 @@ namespace Plogger.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEntry(Guid id, [FromBody] Entry entry)
         {
+            if (entry.Id == Guid.Empty) entry.Id = id;
             if (id != entry.Id)
             {
                 return BadRequest("Entry ID mismatch.");

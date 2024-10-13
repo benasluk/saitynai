@@ -39,6 +39,9 @@ namespace Plogger.Server.Controllers
         public async Task<IActionResult> CreateLog([FromBody] Log log)
         {
             var pipeline = await _context.Pipelines.FindAsync(log.PipelineId);
+            log.Id = Guid.NewGuid();
+            if(log.CreatedAt.Equals(DateTime.MinValue)) log.CreatedAt = DateTime.UtcNow;
+
             if (pipeline == null)
             {
                 return BadRequest($"Pipeline with id {log.PipelineId} does not exist.");
@@ -49,8 +52,6 @@ namespace Plogger.Server.Controllers
                 return UnprocessableEntity("Log creation date cannot be before the pipeline creation date.");
             }
 
-            log.Id = Guid.NewGuid();
-            if(log.CreatedAt.Equals(DateTime.MinValue)) log.CreatedAt = DateTime.UtcNow;
             _context.Logs.Add(log);
             await _context.SaveChangesAsync();
 
@@ -61,7 +62,12 @@ namespace Plogger.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpsertLog(Guid id, [FromBody] Log log)
         {
+            var existingLog = await _context.Logs.FindAsync(id);
+            if (log.CreatedAt.Equals(DateTime.MinValue) && existingLog != null) log.CreatedAt = existingLog.CreatedAt;
+            else if (log.CreatedAt.Equals(DateTime.MinValue)) log.CreatedAt = DateTime.UtcNow;
+
             var pipeline = await _context.Pipelines.FindAsync(log.PipelineId);
+
             if (pipeline == null)
             {
                 return BadRequest($"Pipeline with id {log.PipelineId} does not exist.");
@@ -72,7 +78,6 @@ namespace Plogger.Server.Controllers
                 return UnprocessableEntity("Log creation date cannot be before the pipeline creation date.");
             }
 
-            var existingLog = await _context.Logs.FindAsync(id);
 
             if (existingLog == null)
             {

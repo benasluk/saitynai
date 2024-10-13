@@ -40,17 +40,18 @@ namespace Plogger.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePipeline([FromBody] Pipeline pipeline)
         {
-            // Check for invalid log creation times compared to the pipeline
+            pipeline.Id = Guid.NewGuid();
+            if (pipeline.CreatedAt.Equals(DateTime.MinValue)) pipeline.CreatedAt = DateTime.UtcNow;
+
             foreach (var log in pipeline.Logs)
             {
+                if(log.CreatedAt.Equals(DateTime.MinValue)) log.CreatedAt = DateTime.UtcNow;
                 if (log.CreatedAt < pipeline.CreatedAt)
                 {
                     return UnprocessableEntity($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
                 }
             }
 
-            pipeline.Id = Guid.NewGuid();  // Assign a new unique ID
-            if (pipeline.CreatedAt.Equals(DateTime.MinValue)) pipeline.CreatedAt = DateTime.UtcNow;
             _context.Pipelines.Add(pipeline);
             await _context.SaveChangesAsync();
 
@@ -64,15 +65,15 @@ namespace Plogger.Server.Controllers
             var existingPipeline = await _context.Pipelines.FindAsync(id);
             if (pipeline.CreatedAt.Equals(DateTime.MinValue) && existingPipeline != null) pipeline.CreatedAt = existingPipeline.CreatedAt;
             else if (pipeline.CreatedAt.Equals(DateTime.MinValue)) pipeline.CreatedAt = DateTime.UtcNow;
+
             foreach (var log in pipeline.Logs)
             {
-                Console.WriteLine(log.CreatedAt);
+                if (log.CreatedAt.Equals(DateTime.MinValue)) log.CreatedAt = DateTime.UtcNow;
                 if (log.CreatedAt < pipeline.CreatedAt)
                 {
                     return UnprocessableEntity($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
                 }
             }
-
 
             if (existingPipeline == null)
             {

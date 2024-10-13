@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Plogger.Server.Models;
 using System;
+using System.IO.Pipes;
 
 namespace Plogger.Server.Controllers
 {
@@ -16,6 +17,7 @@ namespace Plogger.Server.Controllers
             _context = context;
         }
 
+        // GET: api/pipelines
         [HttpGet]
         public async Task<IActionResult> GetPipelines()
         {
@@ -23,6 +25,7 @@ namespace Plogger.Server.Controllers
             return Ok(pipelines);
         }
 
+        // GET: api/pipelines/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPipeline(Guid id)
         {
@@ -33,28 +36,63 @@ namespace Plogger.Server.Controllers
             return Ok(pipeline);
         }
 
+        // POST: api/pipelines
         [HttpPost]
         public async Task<IActionResult> CreatePipeline([FromBody] Pipeline pipeline)
         {
-            pipeline.CreatedAt = DateTime.UtcNow;
+            // Check for invalid log creation times compared to the pipeline
+            foreach (var log in pipeline.Logs)
+            {
+                if (log.CreatedAt < pipeline.CreatedAt)
+                {
+                    return BadRequest($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
+                }
+            }
+
+            pipeline.Id = Guid.NewGuid();  // Assign a new unique ID
+            if (pipeline.CreatedAt.Equals(DateTime.MinValue)) pipeline.CreatedAt = DateTime.UtcNow;
             _context.Pipelines.Add(pipeline);
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetPipeline), new { id = pipeline.Id }, pipeline);
         }
 
+        // PUT: api/pipelines/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePipeline(Guid id, [FromBody] Pipeline pipeline)
+        public async Task<IActionResult> UpsertPipeline(Guid id, [FromBody] Pipeline pipeline)
         {
-            if (id != pipeline.Id) return BadRequest();
-            var existingPipeline = await _context.Pipelines.FindAsync(id);
-            if (existingPipeline == null) return NotFound();
+            foreach (var log in pipeline.Logs)
+            {
+                if (log.CreatedAt < pipeline.CreatedAt)
+                {
+                    return BadRequest($"Log creation date ({log.CreatedAt}) cannot be earlier than the pipeline creation date ({pipeline.CreatedAt}).");
+                }
+            }
 
-            existingPipeline.Name = pipeline.Name;
-            _context.Pipelines.Update(existingPipeline);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            var existingPipeline = await _context.Pipelines.FindAsync(id);
+
+            if (existingPipeline == null)
+            {
+                pipeline.Id = id;
+                if (pipeline.CreatedAt.Equals(DateTime.MinValue)) pipeline.CreatedAt = DateTime.UtcNow;
+                _context.Pipelines.Add(pipeline);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetPipeline), new { id = pipeline.Id }, pipeline);
+            }
+            else
+            {
+                existingPipeline.Name = pipeline.Name;
+                existingPipeline.Logs = pipeline.Logs;
+
+                _context.Pipelines.Update(existingPipeline);
+                await _context.SaveChangesAsync();
+
+                return Ok(existingPipeline);
+            }
         }
 
+        // DELETE: api/pipelines/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePipeline(Guid id)
         {

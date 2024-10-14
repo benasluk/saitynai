@@ -34,6 +34,16 @@ namespace Plogger.Server.Controllers
             return Ok(entry);
         }
 
+        // GET: api/entries/log/{id}
+        [HttpGet("log/{id}")]
+        public async Task<IActionResult> GetEntriesOfSingleLog(Guid id)
+        {
+            var entries = await _context.Entries.Where(e => e.LogId == id).ToListAsync();
+
+            if(entries == null) return NotFound();
+            return Ok(entries);
+        }
+
         // POST: api/entries
         [HttpPost]
         public async Task<IActionResult> CreateEntry([FromBody] Entry entry)

@@ -1,4 +1,6 @@
-﻿namespace Plogger.Server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Plogger.Server.Models
 {
     public class Log
     {
@@ -7,5 +9,8 @@
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public ICollection<Entry> Entries { get; set; }
+        [Required]
+        public required string UserId { get; set; }
+        public LoggerUser User { get; set; }
     }
 }

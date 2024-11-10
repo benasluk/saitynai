@@ -1,13 +1,82 @@
-﻿using Plogger.Server.Models;
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using Plogger.Server.Models;
 using System;
 
 namespace Plogger.Server
 {
     public class DbInitializer
     {
-        public static void Initialize(AppDBContext context)
+        private readonly UserManager<LoggerUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public DbInitializer(UserManager<LoggerUser> userManager, RoleManager<IdentityRole> roleManager) 
+        { 
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+
+        private async Task AddAdminUserAsync(AppDBContext context)
+        {
+            var newAdminUser = new LoggerUser()
+            {
+                UserName = "admin",
+                Email = "admin@admin.com",
+                Company = "KTU"
+            };
+
+            var existAdminUser = await _userManager.FindByNameAsync(newAdminUser.UserName);
+            if (existAdminUser == null)
+            {
+                var createAdminUserResult = await _userManager.CreateAsync(newAdminUser, "Admin123!");
+                if (createAdminUserResult.Succeeded)
+                {
+                    await _userManager.AddToRolesAsync(newAdminUser, LoggerRoles.All);
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
+
+        private async Task AddDefaultRolesAsync()
+        {
+            foreach (var role in LoggerRoles.All)
+            {
+                var roleExists = await _roleManager.RoleExistsAsync(role);
+                if (!roleExists) await _roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        public async Task Initialize(AppDBContext context)
         {
             context.Database.EnsureCreated();
+
+            LoggerUser mainUser;
+
+            if(!context.Users.Any())
+            {
+                await AddDefaultRolesAsync();
+                await AddAdminUserAsync(context);
+            }
+
+            if (context.Users.FirstOrDefault((LoggerUser u) => u.UserName == "developer1") == null)
+            {
+                mainUser = new LoggerUser
+                {
+                    UserName = "developer1",
+                    Email = "dev@company.com",
+                    Company = "KTU",
+                };
+
+                var createMainUserResult = await _userManager.CreateAsync(mainUser, "Devops123!");
+                if (createMainUserResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(mainUser, LoggerRoles.Developer);
+                    await context.SaveChangesAsync();
+                }
+
+                //context.Users.Add(mainUser);
+            }
+            else mainUser = context.Users.FirstOrDefault((LoggerUser u) => u.UserName == "developer1");
 
             if (context.Pipelines.Any())
             {
@@ -23,13 +92,17 @@ namespace Plogger.Server
             {
                 Id = toUpdateId,
                 Name = "CI Pipeline",
-                CreatedAt = DateTime.UtcNow.AddHours(-3)
+                CreatedAt = DateTime.UtcNow.AddHours(-3),
+                UserId = mainUser.Id,
+                User = mainUser
             },
             new Pipeline
             {
                 Id = toDeleteId,
                 Name = "CD Pipeline",
-                CreatedAt = DateTime.UtcNow.AddHours(-2)
+                CreatedAt = DateTime.UtcNow.AddHours(-2),
+                UserId = mainUser.Id,
+                User = mainUser
             }
             };
 
@@ -45,14 +118,18 @@ namespace Plogger.Server
                 Id = logToUpdateId,
                 Description = "Build Phase",
                 PipelineId = toUpdateId,
-                CreatedAt = DateTime.UtcNow.AddHours(-2)
+                CreatedAt = DateTime.UtcNow.AddHours(-2),
+                UserId = mainUser.Id,
+                User = mainUser
             },
             new Log
             {
                 Id = logToDeleteId,
                 Description = "Test Phase",
                 PipelineId = toUpdateId,
-                CreatedAt = DateTime.UtcNow.AddHours(-1)
+                CreatedAt = DateTime.UtcNow.AddHours(-1),
+                UserId = mainUser.Id,
+                User = mainUser
             }
             };
 
@@ -69,7 +146,9 @@ namespace Plogger.Server
                 Message = "Build started",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddHours(-2).AddMinutes(5),
-                LogId = logToUpdateId
+                LogId = logToUpdateId,
+                UserId = mainUser.Id,
+                User = mainUser
             },
             new Entry
             {
@@ -77,7 +156,9 @@ namespace Plogger.Server
                 Message = "Build completed",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddHours(-2).AddMinutes(20),
-                LogId = logToUpdateId
+                LogId = logToUpdateId,
+                UserId = mainUser.Id,
+                User = mainUser
             }
             };
 
@@ -89,14 +170,18 @@ namespace Plogger.Server
                 Message = "Test started",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddHours(-1).AddMinutes(5),
-                LogId = logToDeleteId
+                LogId = logToDeleteId,
+                UserId = mainUser.Id,
+                User = mainUser
             },
             new Entry
             {
                 Message = "Test completed",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddHours(-1).AddMinutes(30),
-                LogId = logToDeleteId
+                LogId = logToDeleteId,
+                UserId = mainUser.Id,
+                User = mainUser
             }
             };
 
@@ -113,14 +198,18 @@ namespace Plogger.Server
                 Id = log3Id,
                 Description = "Deploy Phase",
                 PipelineId = toDeleteId,
-                CreatedAt = DateTime.UtcNow.AddMinutes(-45)
+                CreatedAt = DateTime.UtcNow.AddMinutes(-45),
+                UserId = mainUser.Id,
+                User = mainUser
             },
             new Log
             {
                 Id = log4Id,
                 Description = "Monitoring Phase",
                 PipelineId = toDeleteId,
-                CreatedAt = DateTime.UtcNow.AddMinutes(-15)
+                CreatedAt = DateTime.UtcNow.AddMinutes(-15),
+                UserId = mainUser.Id,
+                User = mainUser
             }
             };
 
@@ -133,14 +222,18 @@ namespace Plogger.Server
                 Message = "Deploy started",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddMinutes(-45).AddMinutes(5),
-                LogId = log3Id
+                LogId = log3Id,
+                UserId = mainUser.Id,
+                User = mainUser
             },
             new Entry
             {
                 Message = "Deploy completed",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddMinutes(-45).AddMinutes(20),
-                LogId = log3Id
+                LogId = log3Id,
+                UserId = mainUser.Id,
+                User = mainUser
             }
             };
 
@@ -151,14 +244,18 @@ namespace Plogger.Server
                 Message = "Monitoring started",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddMinutes(-15).AddMinutes(5),
-                LogId = log4Id
+                LogId = log4Id,
+                UserId = mainUser.Id,
+                User = mainUser
             },
             new Entry
             {
                 Message = "Monitoring completed",
                 Status = 0,
                 CreatedAt = DateTime.UtcNow.AddMinutes(-15).AddMinutes(10),
-                LogId = log4Id
+                LogId = log4Id,
+                UserId = mainUser.Id,
+                User = mainUser
             }
             };
 

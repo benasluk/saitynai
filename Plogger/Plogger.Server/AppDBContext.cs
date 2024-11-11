@@ -9,6 +9,7 @@ namespace Plogger.Server
         public DbSet<Pipeline> Pipelines { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<Entry> Entries { get; set; }
+        public DbSet<Session> Sessions { get; set; }
 
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         { }

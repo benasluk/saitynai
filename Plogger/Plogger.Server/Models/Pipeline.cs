@@ -9,9 +9,8 @@ namespace Plogger.Server.Models
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public ICollection<Log> Logs { get; set; }
-        [Required]
-        public required string UserId { get; set; }
-        public LoggerUser User { get; set; }
+        public string? UserId { get; set; }
+        public LoggerUser? User { get; set; }
 
     }
 }

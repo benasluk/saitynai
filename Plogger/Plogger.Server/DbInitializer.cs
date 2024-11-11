@@ -58,6 +58,23 @@ namespace Plogger.Server
                 await AddAdminUserAsync(context);
             }
 
+            if (context.Users.FirstOrDefault((LoggerUser u) => u.UserName == "client1") == null)
+            {
+                var clientUser = new LoggerUser
+                {
+                    UserName = "client1",
+                    Email = "client@company.com",
+                    Company = "KTU",
+                };
+
+                var createMainUserResult = await _userManager.CreateAsync(clientUser, "JustAclient1!");
+                if (createMainUserResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(clientUser, LoggerRoles.Client);
+                    await context.SaveChangesAsync();
+                }
+            }
+
             if (context.Users.FirstOrDefault((LoggerUser u) => u.UserName == "developer1") == null)
             {
                 mainUser = new LoggerUser
@@ -71,11 +88,11 @@ namespace Plogger.Server
                 if (createMainUserResult.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(mainUser, LoggerRoles.Developer);
+                    await _userManager.AddToRoleAsync(mainUser, LoggerRoles.Client);
                     await context.SaveChangesAsync();
                 }
-
-                //context.Users.Add(mainUser);
             }
+
             else mainUser = context.Users.FirstOrDefault((LoggerUser u) => u.UserName == "developer1");
 
             if (context.Pipelines.Any())

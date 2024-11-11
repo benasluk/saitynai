@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Plogger.Server.Models;
 using System;
+using System.Security.Claims;
 
 namespace Plogger.Server.Controllers
 {
@@ -18,6 +21,7 @@ namespace Plogger.Server.Controllers
 
         // GET: api/logs
         [HttpGet]
+        [Authorize(Roles = LoggerRoles.Client)]
         public async Task<IActionResult> GetLogs()
         {
             var logs = await _context.Logs.Include(l => l.Entries).ToListAsync();
@@ -26,6 +30,7 @@ namespace Plogger.Server.Controllers
 
         // GET: api/logs/{id}
         [HttpGet("{id}")]
+        [Authorize(Roles = LoggerRoles.Client)]
         public async Task<IActionResult> GetLog(Guid id)
         {
             var log = await _context.Logs.Include(l => l.Entries).FirstOrDefaultAsync(l => l.Id == id);
@@ -36,6 +41,7 @@ namespace Plogger.Server.Controllers
 
         // POST: api/logs
         [HttpPost]
+        [Authorize(Roles = LoggerRoles.Developer)]
         public async Task<IActionResult> CreateLog([FromBody] Log log)
         {
             var pipeline = await _context.Pipelines.FindAsync(log.PipelineId);
@@ -60,6 +66,7 @@ namespace Plogger.Server.Controllers
 
         // PUT: api/logs/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = LoggerRoles.Developer)]
         public async Task<IActionResult> UpsertLog(Guid id, [FromBody] Log log)
         {
             var existingLog = await _context.Logs.FindAsync(id);
@@ -82,7 +89,6 @@ namespace Plogger.Server.Controllers
             if (existingLog == null)
             {
                 log.Id = id;
-                if (log.CreatedAt.Equals(DateTime.MinValue)) log.CreatedAt = DateTime.UtcNow;
                 _context.Logs.Add(log);
                 await _context.SaveChangesAsync();
 
@@ -90,6 +96,10 @@ namespace Plogger.Server.Controllers
             }
             else
             {
+                if (existingLog.UserId != HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub) &&
+                    !HttpContext.User.IsInRole(LoggerRoles.Admin))
+                        return Forbid();
+
                 existingLog.Description = log.Description;
                 existingLog.Entries = log.Entries;
                 existingLog.CreatedAt = log.CreatedAt;
@@ -103,6 +113,7 @@ namespace Plogger.Server.Controllers
 
         // DELETE: api/logs/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = LoggerRoles.Admin)]
         public async Task<IActionResult> DeleteLog(Guid id)
         {
             var log = await _context.Logs.FindAsync(id);

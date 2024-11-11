@@ -28,7 +28,7 @@ namespace Plogger.Server.Auth
                 if (!createUserResult.Succeeded)
                     return Results.UnprocessableEntity();
 
-                await userManager.AddToRoleAsync(newUser, LoggerRoles.Client);
+                await userManager.AddToRoleAsync(newUser, LoggerRoles.Developer);
 
                 return Results.Created();
             });

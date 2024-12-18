@@ -23,9 +23,12 @@ builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowFrontendWithCredentials", policy =>
     {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("https://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -76,7 +79,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontendWithCredentials");
 
 app.MapFallbackToFile("/index.html");
 

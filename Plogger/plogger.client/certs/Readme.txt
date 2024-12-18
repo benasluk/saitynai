@@ -1,0 +1,1 @@
+This is the folder where certs should be stored. Store "cert.crt" and "cert.key" in here for the frontend to work

@@ -50,8 +50,8 @@ export default defineConfig({
         },
         port: 5173,
         https: {
-            key: fs.readFileSync(keyFilePath),
-            cert: fs.readFileSync(certFilePath),
-        }
+            key: fs.readFileSync('./certs/cert.key'),
+            cert: fs.readFileSync('./certs/cert.crt'),
+        },
     }
 })

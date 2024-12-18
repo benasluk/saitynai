@@ -54,10 +54,12 @@ namespace Plogger.Server.Auth
 
                 var cookieOptions = new CookieOptions
                 {
+                    Path = "/",
+                    Domain = "localhost",
                     HttpOnly = true,
-                    SameSite = SameSiteMode.Lax,
+                    SameSite = SameSiteMode.None,
                     Expires = expiresAt,
-                    Secure = false,
+                    Secure = true,
 
                 };
 

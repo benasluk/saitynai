@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress } from "@mui/material";
+import { apiFetch } from "../helpers/Helpers";
+import Header from "../components/Header";
 
 const HomePage: React.FC = () => {
     const [pipelines, setPipelines] = useState<Pipeline[]>([]);
@@ -16,33 +18,20 @@ const HomePage: React.FC = () => {
 
     useEffect(() => {
         const fetchPipelines = async () => {
-            const token = localStorage.getItem("authToken");
-            console.log(token)
-
-            if (!token) {
-                navigate("/login");
-                return;
-            }
-
             try {
-                const response = await fetch("https://localhost:7076/api/pipelines", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                setLoading(true)
+                const response = await apiFetch("https://localhost:7076/api/pipelines");
+                setLoading(false)
 
                 if (response.ok) {
-                    const data: Pipeline[] = await response.json();
-                    setPipelines(data);
+                    const data = await response.json();
+                    setPipelines(data)
+                    console.log("Pipelines:", data);
                 } else {
-                    setError("Failed to fetch pipelines. Please try again.");
+                    console.error("Failed to fetch pipelines");
                 }
-            } catch (err) {
-                console.error("Error fetching pipelines:", err);
-                setError("An error occurred while fetching pipelines.");
-            } finally {
-                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching pipelines:", error);
             }
         };
 
@@ -73,6 +62,7 @@ const HomePage: React.FC = () => {
                 Pipelines
             </Typography>
             <Paper elevation={3} style={{ padding: "1rem" }}>
+                <Header />
                 <List>
                     {pipelines.map((pipeline) => (
                         <ListItem key={pipeline.id} divider>

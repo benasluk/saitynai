@@ -56,5 +56,8 @@ ops/*.retry
 .idea/
 .vs/
 
+*.crt
+*.key
+
 # Ignoring appsettings to keep secrets secure
 Plogger/Plogger.Server/appsettings.json

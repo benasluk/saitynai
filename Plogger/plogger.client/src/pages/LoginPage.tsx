@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Paper } from "@mui/material";
+import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [responseMessage, setResponseMessage] = useState<string>("");
+    const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -16,12 +19,13 @@ const LoginPage: React.FC = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ username, password }),
+                credentials: "include",
             });
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.accessToken)
                 localStorage.setItem("authToken", data.accessToken);
+                navigate("/");
                 setResponseMessage("Login successful!");
             } else {
                 setResponseMessage("Login failed. Please try again.");

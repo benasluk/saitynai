@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PipelineList from './components/PipelineList';
 import './App.css';
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage'
 
 function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/pipelines" component={PipelineList} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<HomePage />} />
             </Routes>
         </Router>
     );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress } from "@mui/material";
+import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress, Button } from "@mui/material";
 import { apiFetch } from "../helpers/Helpers";
 import Header from "../components/Header";
 
@@ -20,7 +20,10 @@ const HomePage: React.FC = () => {
         const fetchPipelines = async () => {
             try {
                 setLoading(true)
-                const response = await apiFetch("https://localhost:7076/api/pipelines");
+                const response = await apiFetch("https://localhost:7076/api/pipelines", {
+                    method: "GET",
+                    credentials: "include"
+                });
                 setLoading(false)
 
                 if (response.ok) {
@@ -56,6 +59,10 @@ const HomePage: React.FC = () => {
         );
     }
 
+    const handleEditPipeline = (pipelineId: string) => {
+        navigate(`/pipelines/edit/${pipelineId}`);
+    };
+
     return (
         <Box p={3}>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -70,6 +77,13 @@ const HomePage: React.FC = () => {
                                 primary={pipeline.name}
                                 secondary={`Created At: ${new Date(pipeline.createdAt).toLocaleString()}`}
                             />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleEditPipeline(pipeline.id)}
+                            >
+                                Edit
+                            </Button>
                         </ListItem>
                     ))}
                 </List>

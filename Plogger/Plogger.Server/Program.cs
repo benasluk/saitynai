@@ -73,13 +73,13 @@ app.AddAuthApi();
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowFrontendWithCredentials");
+
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors("AllowFrontendWithCredentials");
 
 app.MapFallbackToFile("/index.html");
 

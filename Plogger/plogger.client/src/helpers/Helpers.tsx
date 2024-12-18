@@ -3,12 +3,12 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
 
     options.headers = {
         ...options.headers,
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken??"none"}`,
     };
+    options.credentials = "include"
 
     try {
         const response = await fetch(url, options);
-
         if (response.status === 401) {
             const newToken = await refreshAccessToken();
             if (newToken) {

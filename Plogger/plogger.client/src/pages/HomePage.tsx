@@ -4,6 +4,7 @@ import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress,
 import { apiFetch } from "../helpers/Helpers";
 import Header from "../components/Header";
 import Logo from "../components/Logo";
+import Footer from "../components/Footer";
 
 
 const HomePage: React.FC = () => {
@@ -98,6 +99,7 @@ const HomePage: React.FC = () => {
                     ))}
                 </List>
             </Paper>
+            <Footer />
         </Box>
     );
 };

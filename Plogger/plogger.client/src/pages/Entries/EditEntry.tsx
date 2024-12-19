@@ -9,6 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import CustomNumberInput from "../../components/NumberInput";
 import Logo from "../../components/Logo";
+import Footer from "../../components/Footer";
 
 interface Entry {
     id: string;
@@ -155,6 +156,7 @@ const EditEntry: React.FC = () => {
                     </Button>
                 </Box>
             </Paper>
+            <Footer />
         </Box>
     );
 };

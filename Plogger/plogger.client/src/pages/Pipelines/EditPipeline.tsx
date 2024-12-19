@@ -4,6 +4,7 @@ import { TextField, Button, Typography, Box, Paper, CircularProgress } from "@mu
 import { apiFetch } from "../../helpers/Helpers";
 import Header from "../../components/Header";
 import Logo from "../../components/Logo";
+import Footer from "../../components/Footer";
 
 
 interface Pipeline {
@@ -113,6 +114,7 @@ const EditPipeline: React.FC = () => {
                     Save
                 </Button>
             </Paper>
+            <Footer />
         </Box>
     );
 };

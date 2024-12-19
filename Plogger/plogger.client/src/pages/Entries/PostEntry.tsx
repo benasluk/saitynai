@@ -17,6 +17,7 @@ import { DatePicker, DateTimePicker, LocalizationProvider } from "@mui/x-date-pi
 import { apiFetch } from "../../helpers/Helpers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Logo from "../../components/Logo";
+import Footer from "../../components/Footer";
 
 interface Log {
     id: string;
@@ -181,6 +182,7 @@ const PostEntry: React.FC = () => {
                     
                 </form>
             </Paper>
+            <Footer />
         </Box>
     );
 };

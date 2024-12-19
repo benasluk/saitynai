@@ -4,6 +4,7 @@ import { Box, Typography, Paper, Button, CircularProgress } from "@mui/material"
 import { apiFetch } from "../../helpers/Helpers";
 import Header from "../../components/Header";
 import Logo from "../../components/Logo";
+import Footer from "../../components/Footer";
 
 interface Entry {
     id: string;
@@ -129,6 +130,7 @@ const DeleteEntry: React.FC = () => {
                     </Box>
                 )}
             </Paper>
+            <Footer />
         </Box>
     );
 };

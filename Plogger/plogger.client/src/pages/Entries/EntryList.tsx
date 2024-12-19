@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import { apiFetch } from "../../helpers/Helpers";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../components/Logo";
+import Footer from "../../components/Footer";
 
 interface Entry {
     id: string;
@@ -126,6 +127,7 @@ const EntryList: React.FC = () => {
                     ))}
                 </List>
             </Paper>
+            <Footer />
         </Box>
     );
 };

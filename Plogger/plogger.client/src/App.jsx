@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage'
 import EditPipeline from './pages/Pipelines/EditPipeline'
 import EntryList from './pages/Entries/EntryList'
+import EditEntry from './pages/Entries/EditEntry'
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/pipelines/edit/:id" element={<EditPipeline />} />
 
                 <Route path="/entries" element={<EntryList />} />
+                <Route path="/entries/edit/:id" element={<EditEntry />} />
             </Routes>
         </Router>
     );

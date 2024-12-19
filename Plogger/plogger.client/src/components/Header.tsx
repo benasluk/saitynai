@@ -23,10 +23,20 @@ const Header: React.FC = () => {
         }
     };
 
+    function handleNavigate(url:string){
+        navigate(url)
+    }
+
     return (
         <AppBar position="static">
             <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="h6">Plogger</Typography>
+                <Button color="inherit" onClick={() => {handleNavigate("/")}}>
+                    Pipelines
+                </Button>
+                <Button color="inherit" onClick={() => {handleNavigate("/entries")}}>
+                    Entries
+                </Button>
                 <Button color="inherit" onClick={handleLogout}>
                     Logout
                 </Button>

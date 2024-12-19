@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress } from "@mui/material";
+import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress, Button } from "@mui/material";
 import Header from "../../components/Header";
+import { apiFetch } from "../../helpers/Helpers";
+import { useNavigate } from "react-router-dom";
 
 interface Entry {
     id: string;
@@ -15,22 +17,13 @@ const EntryList: React.FC = () => {
     const [entries, setEntries] = useState<Entry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchEntries = async () => {
-            const token = localStorage.getItem("authToken");
-
-            if (!token) {
-                window.location.href = "/login";
-                return;
-            }
-
             try {
-                const response = await fetch("https://localhost:7076/api/entries/", {
+                const response = await apiFetch("https://localhost:7076/api/entries/", {
                     method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
                 });
 
                 if (response.ok) {
@@ -49,6 +42,10 @@ const EntryList: React.FC = () => {
 
         fetchEntries();
     }, []);
+
+    const handleEditEntry = (entryId: string) => {
+        navigate(`/entries/edit/${entryId}`);
+    };
 
     if (loading) {
         return (
@@ -70,11 +67,11 @@ const EntryList: React.FC = () => {
 
     return (
         <Box p={3}>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Entries
-            </Typography>
             <Paper elevation={3} style={{ padding: "1rem" }}>
                 <Header />
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Entries
+                </Typography>
                 <List>
                     {entries.map((entry) => (
                         <ListItem key={entry.id} divider>
@@ -82,6 +79,13 @@ const EntryList: React.FC = () => {
                                 primary={`Message: ${entry.message}`}
                                 secondary={`Status: ${entry.status} | Created At: ${new Date(entry.createdAt).toLocaleString()}`}
                             />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleEditEntry(entry.id)}
+                            >
+                                Edit
+                            </Button>
                         </ListItem>
                     ))}
                 </List>

@@ -1,34 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, Box, Paper, CircularProgress } from "@mui/material";
+import {
+    Unstable_NumberInput as BaseNumberInput,
+    NumberInputProps,
+    numberInputClasses,
+  } from '@mui/base/Unstable_NumberInput';
 import { apiFetch } from "../../helpers/Helpers";
 import Header from "../../components/Header";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
+import CustomNumberInput from "../../components/NumberInput";
 
-interface Pipeline {
+interface Entry {
     id: string;
-    name: string;
-    createdAt: string;
+    logId: string;
+    message: string;
+    status: number;
+    createdAt?: string;
+    userId?: string;
 }
 
-const EditPipeline: React.FC = () => {
+const EditEntry: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [pipeline, setPipeline] = useState<Pipeline | null>(null);
+    const [entry, setEntry] = useState<Entry | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [name, setName] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
+    const [status, setStatus] = useState<number>(0);
+    const [createdDate, setCreatedDate] = useState<Dayjs | null>(dayjs(Date.now.toString()));
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPipeline = async () => {
             try {
-                const response = await apiFetch(`https://localhost:7076/api/pipelines/${id}`, {
+                const response = await apiFetch(`https://localhost:7076/api/entries/${id}`, {
                     method: "GET",
                 });
 
                 if (response.ok) {
-                    const data: Pipeline = await response.json();
-                    setPipeline(data);
-                    setName(data.name);
+                    const data: Entry = await response.json();
+                    setEntry(data);
+                    setMessage(data.message);
+                    setCreatedDate(dayjs(data.createdAt))
+                    setStatus(data.status)
                 } else {
                     setError("Failed to fetch pipeline. Please try again.");
                 }
@@ -44,24 +61,25 @@ const EditPipeline: React.FC = () => {
     }, [id, navigate]);
 
     const handleSave = async () => {
-        const token = localStorage.getItem("authToken");
+        var createdAt = createdDate?.toJSON()
+        var newEntry: Entry = JSON.parse(JSON.stringify(entry))
+        newEntry.createdAt = createdAt !== undefined ? createdAt : newEntry.createdAt
+        newEntry.message = message !== undefined ? message : newEntry.message
+        newEntry.status = status !== 0 ? status : newEntry.status
 
-        if (!token) {
-            navigate("/login");
-            return;
-        }
+        console.log(newEntry)
 
         try {
-            const response = await apiFetch(`https://localhost:7076/api/pipelines/${id}`, {
+            const response = await apiFetch(`https://localhost:7076/api/entries/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name }),
+                body: JSON.stringify(newEntry),
             });
 
             if (response.ok) {
-                navigate("/");
+                navigate("/entries");
             } else {
                 setError("Failed to save pipeline. Please try again.");
             }
@@ -95,16 +113,24 @@ const EditPipeline: React.FC = () => {
             <Header />
             <Paper elevation={3} style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Edit Pipeline
+                    Edit entry
                 </Typography>
                 <TextField
-                    label="Pipeline Name"
+                    label="Entry message"
                     variant="outlined"
                     fullWidth
                     margin="normal"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                 />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                        label="Created at"
+                        value={createdDate}
+                        onChange={(newValue) => setCreatedDate(newValue)}
+                    />
+                </LocalizationProvider>
+                <CustomNumberInput value={status} onChange={(e, v) => setStatus(v !== null ? v : status)}/>
                 <Button
                     variant="contained"
                     color="primary"
@@ -118,4 +144,4 @@ const EditPipeline: React.FC = () => {
     );
 };
 
-export default EditPipeline;
+export default EditEntry;

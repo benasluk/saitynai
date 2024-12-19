@@ -29,7 +29,6 @@ const HomePage: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setPipelines(data)
-                    console.log("Pipelines:", data);
                 } else {
                     console.error("Failed to fetch pipelines");
                 }

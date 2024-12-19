@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress, Button } from "@mui/material";
 import { apiFetch } from "../helpers/Helpers";
 import Header from "../components/Header";
-import logo from '../assets/Plogger.png';
+import Logo from "../components/Logo";
 
 
 const HomePage: React.FC = () => {
@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
                 minHeight: "100vh",
             }}
         >
-            <img src={logo} width={470} />
+            <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
                 Pipelines
             </Typography>

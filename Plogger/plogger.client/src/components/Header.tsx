@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { TextField, Button, Typography, Box, Paper, AppBar, Toolbar } from "@mui/material";
+import React from "react";
+import { Typography, Button, AppBar, Toolbar, Box, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleLogout = async () => {
         try {
@@ -23,23 +26,31 @@ const Header: React.FC = () => {
         }
     };
 
-    function handleNavigate(url:string){
-        navigate(url)
+    function handleNavigate(url: string) {
+        navigate(url);
     }
 
     return (
         <AppBar position="static">
-            <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h6">Plogger</Typography>
-                <Button color="inherit" onClick={() => {handleNavigate("/")}}>
-                    Pipelines
-                </Button>
-                <Button color="inherit" onClick={() => {handleNavigate("/entries")}}>
-                    Entries
-                </Button>
-                <Button color="inherit" onClick={handleLogout}>
-                    Logout
-                </Button>
+            <Toolbar>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: isMobile ? "column" : "row",
+                        justifyContent: isMobile ? "center" : "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                        gap: isMobile ? 2 : 0,
+                    }}
+                >
+                    <Typography variant="h6" sx={{ textAlign: isMobile ? "center" : "inherit" }}>Plogger</Typography>
+                    <Button color="inherit" onClick={() => handleNavigate("/")}>Pipelines</Button>
+                    <Button color="inherit" onClick={() => handleNavigate("/logs")}>Logs</Button>
+                    <Button color="inherit" onClick={() => handleNavigate("/entries")}>Entries</Button>
+                    <Button color="error" variant="contained" onClick={handleLogout}>
+                        Logout
+                    </Button>
+                </Box>
             </Toolbar>
         </AppBar>
     );

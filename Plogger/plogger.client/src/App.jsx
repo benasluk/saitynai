@@ -5,6 +5,9 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage'
 import EditPipeline from './pages/Pipelines/EditPipeline'
 
+import LogList from './pages/Logs/LogList'
+import EditLog from './pages/Logs/EditLog'
+
 import EntryList from './pages/Entries/EntryList'
 import PostEntry from './pages/Entries/PostEntry'
 import EditEntry from './pages/Entries/EditEntry'
@@ -18,6 +21,9 @@ function App() {
 
                 <Route path="/" element={<HomePage />} />
                 <Route path="/pipelines/edit/:id" element={<EditPipeline />} />
+
+                <Route path="/logs" element={<LogList />} />
+                <Route path="/logs/edit/:id" element={<EditLog />} />
 
                 <Route path="/entries" element={<EntryList />} />
                 <Route path="/entries/create" element={<PostEntry />} />

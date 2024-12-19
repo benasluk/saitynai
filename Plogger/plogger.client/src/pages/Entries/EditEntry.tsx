@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import CustomNumberInput from "../../components/NumberInput";
-import logo from '../../assets/Plogger.png';
+import Logo from "../../components/Logo";
 
 interface Entry {
     id: string;
@@ -114,7 +114,7 @@ const EditEntry: React.FC = () => {
                 minHeight: "100vh",
             }}
         >
-            <img src={logo} width={470} />
+            <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
                 Edit entry
             </Typography>
@@ -136,14 +136,24 @@ const EditEntry: React.FC = () => {
                     />
                 </LocalizationProvider>
                 <CustomNumberInput value={status} onChange={(e, v) => setStatus(v !== null ? v : status)}/>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSave}
-                    style={{ marginTop: "1rem" }}
-                >
-                    Save
-                </Button>
+                <Box mt={3} display="flex" justifyContent="space-between">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSave}
+                        sx={{width: "68%"}}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => navigate("/logs")}
+                        sx={{width: "28%"}}
+                    >
+                        Cancel
+                    </Button>
+                </Box>
             </Paper>
         </Box>
     );

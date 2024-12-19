@@ -3,7 +3,7 @@ import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress,
 import Header from "../../components/Header";
 import { apiFetch } from "../../helpers/Helpers";
 import { useNavigate } from "react-router-dom";
-import logo from '../../assets/Plogger.png';
+import Logo from "../../components/Logo";
 
 interface Entry {
     id: string;
@@ -84,7 +84,7 @@ const EntryList: React.FC = () => {
                 minHeight: "100vh",
             }}
         >
-            <img src={logo} width={470} />
+            <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
                 Entries
             </Typography>

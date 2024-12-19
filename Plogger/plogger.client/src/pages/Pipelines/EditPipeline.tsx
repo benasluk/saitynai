@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, Box, Paper, CircularProgress } from "@mui/material";
 import { apiFetch } from "../../helpers/Helpers";
 import Header from "../../components/Header";
-import logo from '../../assets/Plogger.png';
+import Logo from "../../components/Logo";
+
 
 interface Pipeline {
     id: string;
@@ -78,7 +79,7 @@ const EditPipeline: React.FC = () => {
     if (error) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-                <img src={logo} width={470}/>
+                <Logo />
                 <Header />
                 <Typography variant="h6" color="error">
                     {error}
@@ -89,7 +90,7 @@ const EditPipeline: React.FC = () => {
 
     return (
         <Box p={3}>
-            <img src={logo} width={470}/>
+            <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
                 Edit Pipeline
             </Typography>

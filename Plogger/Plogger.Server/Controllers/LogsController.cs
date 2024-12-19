@@ -69,7 +69,7 @@ namespace Plogger.Server.Controllers
         [Authorize(Roles = LoggerRoles.Developer)]
         public async Task<IActionResult> UpsertLog(Guid id, [FromBody] Log log)
         {
-            var existingLog = await _context.Logs.FindAsync(id);
+            var existingLog = await _context.Logs.Include(l => l.Entries).FirstOrDefaultAsync(l => l.Id == id);
             if (log.CreatedAt.Equals(DateTime.MinValue) && existingLog != null) log.CreatedAt = existingLog.CreatedAt;
             else if (log.CreatedAt.Equals(DateTime.MinValue)) log.CreatedAt = DateTime.UtcNow;
 
@@ -101,7 +101,11 @@ namespace Plogger.Server.Controllers
                         return Forbid();
 
                 existingLog.Description = log.Description;
-                existingLog.Entries = log.Entries;
+                existingLog.Entries.Clear();
+                foreach (var entry in log.Entries)
+                {
+                    existingLog.Entries.Add(entry);
+                }
                 existingLog.CreatedAt = log.CreatedAt;
 
                 _context.Logs.Update(existingLog);

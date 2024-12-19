@@ -16,6 +16,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { DatePicker, DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { apiFetch } from "../../helpers/Helpers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Logo from "../../components/Logo";
 
 interface Log {
     id: string;
@@ -96,11 +97,20 @@ const PostEntry: React.FC = () => {
     }
 
     return (
-        <Box p={3}>
-            <Paper elevation={3} style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Create New Entry
-                </Typography>
+        <Box
+            p={3}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: "100vh",
+            }}
+        >
+            <Logo />
+            <Typography variant="h4" component="h1" gutterBottom>
+                Create New Entry
+            </Typography>
+            <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Status"
@@ -125,6 +135,7 @@ const PostEntry: React.FC = () => {
                             labelId="log-select-label"
                             value={logId}
                             onChange={(e) => setLogId(e.target.value)}
+                            sx={{ textAlign: "left"}}
                         >
                             {logs.map((log) => (
                                 <MenuItem key={log.id} value={log.id}>
@@ -140,15 +151,34 @@ const PostEntry: React.FC = () => {
                             onChange={(newValue) => setCreatedAt(newValue)}
                         />
                     </LocalizationProvider>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        style={{ marginTop: "1rem" }}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            minHeight: "10vh",
+                            marginTop: "1rem",
+                            justifyContent: "space-between"
+                        }}
                     >
-                        Create Entry
-                    </Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            style={{ width: "70%" }}
+                        >
+                            Create Entry
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            style={{ width: "20%" }}
+                            onClick={() => navigate("/entries")}
+                        >
+                            Cancel
+                        </Button>
+                    </Box>
+                    
                 </form>
             </Paper>
         </Box>

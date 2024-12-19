@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box, Typography, Paper, Button, CircularProgress } from "@mui/material";
 import { apiFetch } from "../../helpers/Helpers";
-import logo from '../../assets/Plogger.png';
 import Header from "../../components/Header";
+import Logo from "../../components/Logo";
 
 interface Entry {
     id: string;
@@ -90,14 +90,14 @@ const DeleteEntry: React.FC = () => {
                 minHeight: "100vh",
             }}
         >
-            <img src={logo} width={470} />
+            <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
                 Delete Entry
             </Typography>
-            <Paper elevation={3} style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
+            <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
                 {entry && (
-                    <Box>
+                    <Box sx={{mt: 3}}>
                         <Typography variant="body1">
                             <strong>Message:</strong> {entry.message}
                         </Typography>
@@ -109,9 +109,6 @@ const DeleteEntry: React.FC = () => {
                         </Typography>
                         <Typography variant="body1">
                             <strong>Created At:</strong> {new Date(entry.createdAt).toLocaleString()}
-                        </Typography>
-                        <Typography variant="body1">
-                            <strong>User ID:</strong> {entry.userId || "N/A"}
                         </Typography>
                         <Box mt={2} display="flex" justifyContent="space-between">
                             <Button

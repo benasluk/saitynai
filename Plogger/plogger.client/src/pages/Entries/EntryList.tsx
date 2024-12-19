@@ -3,6 +3,7 @@ import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress,
 import Header from "../../components/Header";
 import { apiFetch } from "../../helpers/Helpers";
 import { useNavigate } from "react-router-dom";
+import logo from '../../assets/Plogger.png';
 
 interface Entry {
     id: string;
@@ -66,12 +67,21 @@ const EntryList: React.FC = () => {
     }
 
     return (
-        <Box p={3}>
-            <Paper elevation={3} style={{ padding: "1rem" }}>
+        <Box
+            p={3}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: "100vh",
+            }}
+        >
+            <img src={logo} width={470} />
+            <Typography variant="h4" component="h1" gutterBottom>
+                Entries
+            </Typography>
+            <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Entries
-                </Typography>
                 <List>
                     {entries.map((entry) => (
                         <ListItem key={entry.id} divider>

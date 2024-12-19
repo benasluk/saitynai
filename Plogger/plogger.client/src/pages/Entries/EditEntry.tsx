@@ -1,11 +1,6 @@
 import React, { createRef, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, Box, Paper, CircularProgress } from "@mui/material";
-import {
-    Unstable_NumberInput as BaseNumberInput,
-    NumberInputProps,
-    numberInputClasses,
-  } from '@mui/base/Unstable_NumberInput';
 import { apiFetch } from "../../helpers/Helpers";
 import Header from "../../components/Header";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -13,6 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import CustomNumberInput from "../../components/NumberInput";
+import logo from '../../assets/Plogger.png';
 
 interface Entry {
     id: string;
@@ -109,12 +105,21 @@ const EditEntry: React.FC = () => {
     }
 
     return (
-        <Box p={3}>
-            <Header />
-            <Paper elevation={3} style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Edit entry
-                </Typography>
+        <Box
+            p={3}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: "100vh",
+            }}
+        >
+            <img src={logo} width={470} />
+            <Typography variant="h4" component="h1" gutterBottom>
+                Edit entry
+            </Typography>
+            <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
+                <Header />
                 <TextField
                     label="Entry message"
                     variant="outlined"

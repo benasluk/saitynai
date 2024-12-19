@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress, Button } from "@mui/material";
 import { apiFetch } from "../helpers/Helpers";
 import Header from "../components/Header";
+import logo from '../assets/Plogger.png';
+
 
 const HomePage: React.FC = () => {
     const [pipelines, setPipelines] = useState<Pipeline[]>([]);
@@ -63,11 +65,20 @@ const HomePage: React.FC = () => {
     };
 
     return (
-        <Box p={3}>
+        <Box
+            p={3}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: "100vh",
+            }}
+        >
+            <img src={logo} width={470} />
             <Typography variant="h4" component="h1" gutterBottom>
                 Pipelines
             </Typography>
-            <Paper elevation={3} style={{ padding: "1rem" }}>
+            <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
                 <List>
                     {pipelines.map((pipeline) => (

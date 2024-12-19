@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Paper } from "@mui/material";
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
+import logo from '../assets/Plogger.png';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState<string>("");
@@ -41,9 +42,11 @@ const LoginPage: React.FC = () => {
             display="flex"
             justifyContent="center"
             alignItems="center"
+            flexDirection="column"
             minHeight="100vh"
             bgcolor="#f5f5f5"
         >
+            <img src={logo} width={470} />
             <Paper elevation={3} style={{ padding: "2rem", maxWidth: "400px", width: "100%" }}>
                 <Typography variant="h4" component="h1" gutterBottom align="center">
                     Login

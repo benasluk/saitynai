@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, Box, Paper, CircularProgress } from "@mui/material";
 import { apiFetch } from "../../helpers/Helpers";
 import Header from "../../components/Header";
+import logo from '../../assets/Plogger.png';
 
 interface Pipeline {
     id: string;
@@ -44,20 +45,15 @@ const EditPipeline: React.FC = () => {
     }, [id, navigate]);
 
     const handleSave = async () => {
-        const token = localStorage.getItem("authToken");
-
-        if (!token) {
-            navigate("/login");
-            return;
-        }
-
+        var newPipeline: Pipeline = JSON.parse(JSON.stringify(pipeline))
+        newPipeline.name = name
         try {
             const response = await apiFetch(`https://localhost:7076/api/pipelines/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name }),
+                body: JSON.stringify(newPipeline),
             });
 
             if (response.ok) {
@@ -82,6 +78,7 @@ const EditPipeline: React.FC = () => {
     if (error) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <img src={logo} width={470}/>
                 <Header />
                 <Typography variant="h6" color="error">
                     {error}
@@ -92,11 +89,12 @@ const EditPipeline: React.FC = () => {
 
     return (
         <Box p={3}>
+            <img src={logo} width={470}/>
+            <Typography variant="h4" component="h1" gutterBottom>
+                Edit Pipeline
+            </Typography>
+            <Paper elevation={3} style={{ padding: "1rem", margin: "0 auto", width: "80%" }}>
             <Header />
-            <Paper elevation={3} style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Edit Pipeline
-                </Typography>
                 <TextField
                     label="Pipeline Name"
                     variant="outlined"

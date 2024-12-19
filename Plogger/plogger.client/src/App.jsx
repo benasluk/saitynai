@@ -4,8 +4,11 @@ import './App.css';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage'
 import EditPipeline from './pages/Pipelines/EditPipeline'
+
 import EntryList from './pages/Entries/EntryList'
+import PostEntry from './pages/Entries/PostEntry'
 import EditEntry from './pages/Entries/EditEntry'
+import DeleteEntry from './pages/Entries/DeleteEntry'
 
 function App() {
     return (
@@ -17,7 +20,9 @@ function App() {
                 <Route path="/pipelines/edit/:id" element={<EditPipeline />} />
 
                 <Route path="/entries" element={<EntryList />} />
+                <Route path="/entries/create" element={<PostEntry />} />
                 <Route path="/entries/edit/:id" element={<EditEntry />} />
+                <Route path="/entries/delete/:id" element={<DeleteEntry />} />
             </Routes>
         </Router>
     );

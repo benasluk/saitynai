@@ -48,6 +48,14 @@ const EntryList: React.FC = () => {
         navigate(`/entries/edit/${entryId}`);
     };
 
+    const handleDeleteEntry = (entryId: string) => {
+        navigate(`/entries/delete/${entryId}`);
+    };
+
+    const handleCreateEntry = () => {
+        navigate(`/entries/create/`);
+    };
+
     if (loading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -83,6 +91,15 @@ const EntryList: React.FC = () => {
             <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
                 <List>
+                    <ListItem>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => handleCreateEntry()}
+                        >
+                            Create new entry
+                        </Button>
+                    </ListItem>
                     {entries.map((entry) => (
                         <ListItem key={entry.id} divider>
                             <ListItemText
@@ -93,8 +110,17 @@ const EntryList: React.FC = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => handleEditEntry(entry.id)}
+                                sx={{ml: "10px"}}
                             >
                                 Edit
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => handleDeleteEntry(entry.id)}
+                                sx={{ml: "10px"}}
+                            >
+                                Delete
                             </Button>
                         </ListItem>
                     ))}

@@ -61,7 +61,7 @@ const EditEntry: React.FC = () => {
         var newEntry: Entry = JSON.parse(JSON.stringify(entry))
         newEntry.createdAt = createdAt !== undefined ? createdAt : newEntry.createdAt
         newEntry.message = message !== undefined ? message : newEntry.message
-        newEntry.status = status !== 0 ? status : newEntry.status
+        newEntry.status = status >= 0 ? status : newEntry.status
 
         console.log(newEntry)
 

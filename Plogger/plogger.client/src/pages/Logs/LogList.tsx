@@ -16,6 +16,7 @@ interface Log {
 
 const LogList: React.FC = () => {
     const [logs, setLogs] = useState<Log[]>([]);
+    const [roles, setRoles] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -33,7 +34,20 @@ const LogList: React.FC = () => {
                 setLoading(false);
             }
         };
+        const fetchRoles = () => {
+            const token = localStorage.getItem("authToken");
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split(".")[1]));
+                    const userRoles = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || [];
+                    setRoles(Array.isArray(userRoles) ? userRoles : [userRoles]);
+                } catch (error) {
+                    console.error("Error parsing token payload:", error);
+                }
+            }
+        };
 
+        fetchRoles();
         fetchLogs();
     }, []);
 
@@ -84,37 +98,43 @@ const LogList: React.FC = () => {
             <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
                 <List>
-                    <ListItem>
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => handleCreateLog()}
-                        >
-                            Create new log
-                        </Button>
-                    </ListItem>
+                    {roles.includes("Developer") && (
+                        <ListItem>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() => handleCreateLog()}
+                            >
+                                Create new log
+                            </Button>
+                        </ListItem>
+                    )}
                     {logs.map((log) => (
                         <ListItem key={log.id} divider>
                             <ListItemText
                                 primary={log.description}
                                 secondary={`Created At: ${new Date(log.createdAt).toLocaleString()} | Entries: ${log.entries.length}`}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleEditLog(log.id)}
-                                sx={{ml: "10px"}}
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() => handleDeleteLog(log.id)}
-                                sx={{ml: "10px"}}
-                            >
-                                Delete
-                            </Button>
+                            {roles.includes("Developer") && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleEditLog(log.id)}
+                                    sx={{ml: "10px"}}
+                                >
+                                    Edit
+                                </Button>
+                            )}
+                            {roles.includes("Admin") && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => handleDeleteLog(log.id)}
+                                    sx={{ml: "10px"}}
+                                >
+                                    Delete
+                                </Button>
+                            )}
                         </ListItem>
                     ))}
                 </List>

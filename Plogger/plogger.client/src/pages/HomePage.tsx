@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress, Button } from "@mui/material";
 import { apiFetch } from "../helpers/Helpers";
@@ -6,9 +6,9 @@ import Header from "../components/Header";
 import Logo from "../components/Logo";
 import Footer from "../components/Footer";
 
-
 const HomePage: React.FC = () => {
     const [pipelines, setPipelines] = useState<Pipeline[]>([]);
+    const [roles, setRoles] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -22,24 +22,39 @@ const HomePage: React.FC = () => {
     useEffect(() => {
         const fetchPipelines = async () => {
             try {
-                setLoading(true)
+                setLoading(true);
                 const response = await apiFetch("/api/pipelines", {
                     method: "GET",
-                    credentials: "include"
+                    credentials: "include",
                 });
-                setLoading(false)
 
                 if (response.ok) {
                     const data = await response.json();
-                    setPipelines(data)
+                    setPipelines(data);
                 } else {
                     console.error("Failed to fetch pipelines");
                 }
             } catch (error) {
                 console.error("Error fetching pipelines:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
+        const fetchRoles = () => {
+            const token = localStorage.getItem("authToken");
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split(".")[1]));
+                    const userRoles = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || [];
+                    setRoles(Array.isArray(userRoles) ? userRoles : [userRoles]);
+                } catch (error) {
+                    console.error("Error parsing token payload:", error);
+                }
+            }
+        };
+
+        fetchRoles();
         fetchPipelines();
     }, [navigate]);
 
@@ -90,36 +105,42 @@ const HomePage: React.FC = () => {
             <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
                 <List>
-                    <ListItem>
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => handleCreatePipeline()}
-                        >
-                            Create new log
-                        </Button>
-                    </ListItem>
+                    {roles.includes("Developer") && (
+                        <ListItem>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() => handleCreatePipeline()}
+                            >
+                                Create new pipeline
+                            </Button>
+                        </ListItem>
+                    )}
                     {pipelines.map((pipeline) => (
                         <ListItem key={pipeline.id} divider>
                             <ListItemText
                                 primary={pipeline.name}
                                 secondary={`Created At: ${new Date(pipeline.createdAt).toLocaleString()}`}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleEditPipeline(pipeline.id)}
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() => handleDeletePipeline(pipeline.id)}
-                                sx={{ml: "10px"}}
-                            >
-                                Delete
-                            </Button>
+                            {roles.includes("Developer") && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleEditPipeline(pipeline.id)}
+                                >
+                                    Edit
+                                </Button>
+                            )}
+                            {roles.includes("Admin") && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => handleDeletePipeline(pipeline.id)}
+                                    sx={{ ml: "10px" }}
+                                >
+                                    Delete
+                                </Button>
+                            )}
                         </ListItem>
                     ))}
                 </List>

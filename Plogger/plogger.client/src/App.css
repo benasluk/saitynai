@@ -1,4 +1,6 @@
-﻿#root {
+﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
+#root {
     width: 100%;
     margin: 0 auto;
     padding: 2rem;

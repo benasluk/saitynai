@@ -1,11 +1,13 @@
+let redirectingToLogin = false;
+
 export const apiFetch = async (url: string, options: RequestInit = {}) => {
     const accessToken = localStorage.getItem("authToken");
 
     options.headers = {
         ...options.headers,
-        Authorization: `Bearer ${accessToken??"none"}`,
+        Authorization: `Bearer ${accessToken ?? "none"}`,
     };
-    options.credentials = "include"
+    options.credentials = "include";
 
     try {
         const response = await fetch(url, options);
@@ -17,8 +19,10 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
                     Authorization: `Bearer ${newToken}`,
                 };
                 return fetch(url, options);
-            } else {
+            } else if (!redirectingToLogin) {
+                redirectingToLogin = true;
                 localStorage.removeItem("authToken");
+                alert("Please log in again");
                 window.location.href = "/login";
             }
         }

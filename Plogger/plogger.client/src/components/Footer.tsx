@@ -28,8 +28,8 @@ const Footer: React.FC = () => {
                         width: "100%",
                     }}
                 >
-                    <Typography variant="body1">&copy; 2024 Plogger</Typography>
-                    <Typography variant="body1">Logged in as: {userName}</Typography>
+                    <Typography variant="body1" sx={{fontFamily: "'Playfair Display', sans-serif"}}>&copy; 2024 Plogger</Typography>
+                    <Typography variant="body1" sx={{fontFamily: "'Playfair Display', sans-serif"}}>Logged in as: {userName}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>

@@ -24,7 +24,7 @@ const EditPipeline: React.FC = () => {
     useEffect(() => {
         const fetchPipeline = async () => {
             try {
-                const response = await apiFetch(`https://localhost:7076/api/pipelines/${id}`, {
+                const response = await apiFetch(`/api/pipelines/${id}`, {
                     method: "GET",
                 });
 
@@ -50,7 +50,7 @@ const EditPipeline: React.FC = () => {
         var newPipeline: Pipeline = JSON.parse(JSON.stringify(pipeline))
         newPipeline.name = name
         try {
-            const response = await apiFetch(`https://localhost:7076/api/pipelines/${id}`, {
+            const response = await apiFetch(`/api/pipelines/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

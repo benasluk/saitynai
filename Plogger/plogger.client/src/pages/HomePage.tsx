@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
         const fetchPipelines = async () => {
             try {
                 setLoading(true)
-                const response = await apiFetch("https://localhost:7076/api/pipelines", {
+                const response = await apiFetch("/api/pipelines", {
                     method: "GET",
                     credentials: "include"
                 });

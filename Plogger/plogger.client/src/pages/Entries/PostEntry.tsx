@@ -37,7 +37,7 @@ const PostEntry: React.FC = () => {
     useEffect(() => {
         const fetchLogs = async () => {
             try {
-                const response = await apiFetch("https://localhost:7076/api/logs");
+                const response = await apiFetch("/api/logs");
                 const data: Log[] = await response.json();
                 setLogs(data);
             } catch (err) {
@@ -55,7 +55,7 @@ const PostEntry: React.FC = () => {
         e.preventDefault();
 
         try {
-            const response = await apiFetch("https://localhost:7076/api/entries", {
+            const response = await apiFetch("/api/entries", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

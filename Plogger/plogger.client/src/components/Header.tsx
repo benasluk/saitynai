@@ -10,7 +10,7 @@ const Header: React.FC = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch("https://localhost:7076/api/logout", {
+            const response = await fetch("/api/logout", {
                 method: "POST",
                 credentials: "include",
             });

@@ -36,7 +36,7 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
 
 export const refreshAccessToken = async (): Promise<string | null> => {
     try {
-        const response = await fetch("https://localhost:7076/api/accessToken", {
+        const response = await fetch("/api/accessToken", {
             method: "POST",
             credentials: "include",
         });

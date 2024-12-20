@@ -33,7 +33,7 @@ const EditEntry: React.FC = () => {
     useEffect(() => {
         const fetchPipeline = async () => {
             try {
-                const response = await apiFetch(`https://localhost:7076/api/entries/${id}`, {
+                const response = await apiFetch(`/api/entries/${id}`, {
                     method: "GET",
                 });
 
@@ -67,7 +67,7 @@ const EditEntry: React.FC = () => {
         console.log(newEntry)
 
         try {
-            const response = await apiFetch(`https://localhost:7076/api/entries/${id}`, {
+            const response = await apiFetch(`/api/entries/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

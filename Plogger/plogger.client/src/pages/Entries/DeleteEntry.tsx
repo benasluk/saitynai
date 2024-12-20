@@ -25,7 +25,7 @@ const DeleteEntry: React.FC = () => {
     useEffect(() => {
         const fetchEntry = async () => {
             try {
-                const response = await apiFetch(`https://localhost:7076/api/entries/${id}`, {
+                const response = await apiFetch(`/api/entries/${id}`, {
                     method: "GET",
                 });
 
@@ -48,7 +48,7 @@ const DeleteEntry: React.FC = () => {
 
     const handleDelete = async () => {
         try {
-            const response = await apiFetch(`https://localhost:7076/api/entries/${id}`, {
+            const response = await apiFetch(`/api/entries/${id}`, {
                 method: "DELETE",
             });
 

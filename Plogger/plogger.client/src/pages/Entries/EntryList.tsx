@@ -24,7 +24,7 @@ const EntryList: React.FC = () => {
     useEffect(() => {
         const fetchEntries = async () => {
             try {
-                const response = await apiFetch("https://localhost:7076/api/entries/", {
+                const response = await apiFetch("/api/entries/", {
                     method: "GET",
                 });
 

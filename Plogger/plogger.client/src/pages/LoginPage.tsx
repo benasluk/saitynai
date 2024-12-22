@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Paper } from "@mui/material";
-import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 
@@ -14,7 +13,7 @@ const LoginPage: React.FC = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch("https://localhost:7076/api/login", {
+            const response = await fetch("/api/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,6 +34,10 @@ const LoginPage: React.FC = () => {
             console.error("Error during login:", error);
             setResponseMessage("An error occurred. Please try again later.");
         }
+    };
+
+    const handleRegister = () => {
+        navigate(`/register`);
     };
 
     return (
@@ -79,6 +82,15 @@ const LoginPage: React.FC = () => {
                         Login
                     </Button>
                 </form>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    fullWidth
+                    style={{ marginTop: "1rem" }}
+                    onClick={handleRegister}
+                >
+                    Sign up
+                </Button>
                 {responseMessage && (
                     <Typography
                         variant="body2"

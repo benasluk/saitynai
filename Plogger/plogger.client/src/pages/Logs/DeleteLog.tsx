@@ -6,60 +6,59 @@ import Header from "../../components/Header";
 import Logo from "../../components/Logo";
 import Footer from "../../components/Footer";
 
-interface Entry {
+interface Log {
     id: string;
-    logId: string;
-    message: string;
-    status: number;
+    pipelineId: string;
+    description: string;
     createdAt: string;
-    userId?: string;
+    entries: Array<{ id: string; message: string; status: number; createdAt: string }>;
 }
 
-const DeleteEntry: React.FC = () => {
+const DeleteLog: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [entry, setEntry] = useState<Entry | null>(null);
+    const [log, setLog] = useState<Log | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchEntry = async () => {
+        const fetchLog = async () => {
             try {
-                const response = await apiFetch(`/api/entries/${id}`, {
+                const response = await apiFetch(`/api/logs/${id}`, {
                     method: "GET",
                 });
 
                 if (response.ok) {
-                    const data: Entry = await response.json();
-                    setEntry(data);
+                    const data: Log = await response.json();
+                    setLog(data);
                 } else {
-                    setError("Failed to fetch entry. Please try again.");
+                    setError("Failed to fetch log. Please try again.");
                 }
             } catch (err) {
-                console.error("Error fetching entry:", err);
-                setError("An error occurred while fetching the entry.");
+                console.error("Error fetching log:", err);
+                setError("An error occurred while fetching the log.");
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchEntry();
+        fetchLog();
     }, [id, navigate]);
 
     const handleDelete = async () => {
         try {
-            const response = await apiFetch(`/api/entries/${id}`, {
+            const response = await apiFetch(`/api/logs/${id}`, {
                 method: "DELETE",
             });
 
             if (response.ok) {
-                navigate("/entries");
+                navigate("/logs");
             } else {
-                setError("Failed to delete entry. Please try again.");
+                setError("Failed to delete log. Please try again.");
             }
         } catch (err) {
-            console.error("Error deleting entry:", err);
-            setError("An error occurred while deleting the entry.");
+            console.error("Error deleting log:", err);
+            setError("An error occurred while deleting the log.");
         }
     };
 
@@ -93,23 +92,23 @@ const DeleteEntry: React.FC = () => {
         >
             <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
-                Delete Entry
+                Delete Log
             </Typography>
             <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
-                {entry && (
-                    <Box sx={{mt: 3}}>
+                {log && (
+                    <Box sx={{ mt: 3 }}>
                         <Typography variant="body1">
-                            <strong>Message:</strong> {entry.message}
+                            <strong>Description:</strong> {log.description}
                         </Typography>
                         <Typography variant="body1">
-                            <strong>Status:</strong> {entry.status}
+                            <strong>Pipeline ID:</strong> {log.pipelineId}
                         </Typography>
                         <Typography variant="body1">
-                            <strong>Log ID:</strong> {entry.logId}
+                            <strong>Created At:</strong> {new Date(log.createdAt).toLocaleString()}
                         </Typography>
                         <Typography variant="body1">
-                            <strong>Created At:</strong> {new Date(entry.createdAt).toLocaleString()}
+                            <strong>Number of Entries:</strong> {log.entries.length}
                         </Typography>
                         <Box mt={2} display="flex" justifyContent="space-between">
                             <Button
@@ -122,7 +121,7 @@ const DeleteEntry: React.FC = () => {
                             <Button
                                 variant="outlined"
                                 color="primary"
-                                onClick={() => navigate("/entries")}
+                                onClick={() => navigate("/logs")}
                             >
                                 Cancel
                             </Button>
@@ -135,4 +134,4 @@ const DeleteEntry: React.FC = () => {
     );
 };
 
-export default DeleteEntry;
+export default DeleteLog;

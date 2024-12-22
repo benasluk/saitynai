@@ -1,12 +1,14 @@
 # Plogger v0.0.1
 
 ### About the program
-This program is used to collect logs through an API interface and showcase the collected data to 3 different types of users - admins, developers and clients.
+This program is used to collect logs through an API interface and showcase the collected data to 3 different types of users - admins, developers and clients. This program has an UI frontend that allows viewing and editing them for analysis.
 
 ### Usage example
 A CI/CD pipeline in your app collects and sends logs to this program, which stores the successful/unsuccesful logs and allows users to see the results.
 
 Also funtions as a vault for old logs to see what had happened in the past.
+
+This project is set up for usage in a LAN and thus requires configuration for it to work properly. All the public IP adresses must be changed in order to start the project.
 
 ### Program components
 This program has 3 main objects:
@@ -14,7 +16,7 @@ This program has 3 main objects:
 * Log (contains entries from a single pipeline run)
 * Pipeline (Info about the pipeline and the logs it contains)
 
-This program also has a simple web UI - it features only a home page for all the different types of users.
+This program also has a simple web UI - it features a home page for all the different types of users as well as all the lists of pipelines, logs and entries.
 
 ### Used technologies
 

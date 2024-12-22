@@ -1,46 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress, Button } from "@mui/material";
-import { apiFetch } from "../helpers/Helpers";
-import Header from "../components/Header";
-import Logo from "../components/Logo";
-import Footer from "../components/Footer";
+import { apiFetch } from "../../helpers/Helpers";
+import Header from "../../components/Header";
+import { useNavigate } from "react-router-dom";
+import Logo from "../../components/Logo";
+import Footer from "../../components/Footer";
 
-const HomePage: React.FC = () => {
-    const [pipelines, setPipelines] = useState<Pipeline[]>([]);
+interface Log {
+    id: string;
+    pipelineId: string;
+    description: string;
+    createdAt: string;
+    entries: { id: string }[];
+}
+
+const LogList: React.FC = () => {
+    const [logs, setLogs] = useState<Log[]>([]);
     const [roles, setRoles] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    interface Pipeline {
-        id: string;
-        name: string;
-        createdAt: string;
-    }
-
     useEffect(() => {
-        const fetchPipelines = async () => {
+        const fetchLogs = async () => {
             try {
-                setLoading(true);
-                const response = await apiFetch("/api/pipelines", {
-                    method: "GET",
-                    credentials: "include",
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setPipelines(data);
-                } else {
-                    console.error("Failed to fetch pipelines");
-                }
-            } catch (error) {
-                console.error("Error fetching pipelines:", error);
+                const response = await apiFetch("/api/logs");
+                const data: Log[] = await response.json();
+                setLogs(data);
+            } catch (err) {
+                console.error("Error fetching logs:", err);
+                setError("Failed to fetch logs. Please try again.");
             } finally {
                 setLoading(false);
             }
         };
-
         const fetchRoles = () => {
             const token = localStorage.getItem("authToken");
             if (token) {
@@ -55,8 +48,20 @@ const HomePage: React.FC = () => {
         };
 
         fetchRoles();
-        fetchPipelines();
-    }, [navigate]);
+        fetchLogs();
+    }, []);
+
+    const handleEditLog = (logId: string) => {
+        navigate(`/logs/edit/${logId}`);
+    };
+
+    const handleDeleteLog = (logId: string) => {
+        navigate(`/logs/delete/${logId}`);
+    };
+
+    const handleCreateLog = () => {
+        navigate(`/logs/create/`);
+    };
 
     if (loading) {
         return (
@@ -76,18 +81,6 @@ const HomePage: React.FC = () => {
         );
     }
 
-    const handleEditPipeline = (pipelineId: string) => {
-        navigate(`/pipelines/edit/${pipelineId}`);
-    };
-
-    const handleCreatePipeline = () => {
-        navigate(`/pipelines/create/`);
-    };
-
-    const handleDeletePipeline = (id: string) => {
-        navigate(`/pipelines/delete/${id}`);
-    };
-
     return (
         <Box
             p={3}
@@ -100,7 +93,7 @@ const HomePage: React.FC = () => {
         >
             <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
-                Pipelines
+                Logs
             </Typography>
             <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
@@ -110,23 +103,24 @@ const HomePage: React.FC = () => {
                             <Button
                                 variant="contained"
                                 color="success"
-                                onClick={() => handleCreatePipeline()}
+                                onClick={() => handleCreateLog()}
                             >
-                                Create new pipeline
+                                Create new log
                             </Button>
                         </ListItem>
                     )}
-                    {pipelines.map((pipeline) => (
-                        <ListItem key={pipeline.id} divider>
+                    {logs.map((log) => (
+                        <ListItem key={log.id} divider>
                             <ListItemText
-                                primary={pipeline.name}
-                                secondary={`Created At: ${new Date(pipeline.createdAt).toLocaleString()}`}
+                                primary={log.description}
+                                secondary={`Created At: ${new Date(log.createdAt).toLocaleString()} | Entries: ${log.entries.length}`}
                             />
                             {roles.includes("Developer") && (
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handleEditPipeline(pipeline.id)}
+                                    onClick={() => handleEditLog(log.id)}
+                                    sx={{ml: "10px"}}
                                 >
                                     Edit
                                 </Button>
@@ -135,8 +129,8 @@ const HomePage: React.FC = () => {
                                 <Button
                                     variant="contained"
                                     color="error"
-                                    onClick={() => handleDeletePipeline(pipeline.id)}
-                                    sx={{ ml: "10px" }}
+                                    onClick={() => handleDeleteLog(log.id)}
+                                    sx={{ml: "10px"}}
                                 >
                                     Delete
                                 </Button>
@@ -150,4 +144,4 @@ const HomePage: React.FC = () => {
     );
 };
 
-export default HomePage;
+export default LogList;

@@ -28,7 +28,18 @@ namespace Plogger.Server.Auth
                 if (!createUserResult.Succeeded)
                     return Results.UnprocessableEntity();
 
-                await userManager.AddToRoleAsync(newUser, LoggerRoles.Developer);
+                foreach (var role in dto.roles)
+                {
+                    // Validate against LoggerRoles.All
+                    if (!LoggerRoles.All.Contains(role))
+                    {
+                        return Results.UnprocessableEntity($"Invalid role: {role}");
+                    }
+
+                    // Add the valid role to the user
+                    await userManager.AddToRoleAsync(newUser, role);
+                }
+
 
                 return Results.Created();
             });
@@ -55,7 +66,7 @@ namespace Plogger.Server.Auth
                 var cookieOptions = new CookieOptions
                 {
                     Path = "/",
-                    Domain = "localhost",
+                    Domain = "100.87.158.113",
                     HttpOnly = true,
                     SameSite = SameSiteMode.None,
                     Expires = expiresAt,
@@ -125,7 +136,7 @@ namespace Plogger.Server.Auth
         }
     }
 
-    public record RegisterUserDTO(string UserName, string Email, string Password, string Company);
+    public record RegisterUserDTO(string UserName, string Email, string Password, string Company, List<string> roles);
     public record LoginDTO(string UserName, string Password);
     public record SuccessfulLoginDTO(string AccessToken);
 }

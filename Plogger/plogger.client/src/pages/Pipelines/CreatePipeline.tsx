@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     Box,
     Typography,
@@ -8,9 +8,8 @@ import {
     Button,
     List,
     ListItem,
-    IconButton,
-    CircularProgress,
     ListItemText,
+    IconButton,
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -27,26 +26,21 @@ interface Entry {
 }
 
 interface Log {
-    id?: string;
     description: string;
     createdAt: string;
     entries: Entry[];
 }
 
 interface Pipeline {
-    id?: string;
     name: string;
     createdAt: string;
     logs: Log[];
 }
 
-const EditPipeline: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
-    const [pipeline, setPipeline] = useState<Pipeline | null>(null);
+const CreatePipeline: React.FC = () => {
     const [name, setName] = useState<string>("");
     const [createdAt, setCreatedAt] = useState<Dayjs | null>(dayjs());
     const [logs, setLogs] = useState<Log[]>([]);
-    const [error, setError] = useState<string | null>(null);
     const [newLogDescription, setNewLogDescription] = useState<string>("");
     const [newLogCreatedAt, setNewLogCreatedAt] = useState<Dayjs | null>(dayjs());
     const [newLogEntries, setNewLogEntries] = useState<Entry[]>([]);
@@ -54,53 +48,29 @@ const EditPipeline: React.FC = () => {
     const [newEntryStatus, setNewEntryStatus] = useState<number | "">("");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchPipeline = async () => {
-            try {
-                const response = await apiFetch(`/api/pipelines/${id}`);
-                if (response.ok) {
-                    const data: Pipeline = await response.json();
-                    setPipeline(data);
-                    setName(data.name);
-                    setCreatedAt(dayjs(data.createdAt));
-                    setLogs(data.logs);
-                } else {
-                    setError("Failed to fetch pipeline. Please try again.");
-                }
-            } catch (err) {
-                console.error("Error fetching pipeline:", err);
-                setError("An error occurred while fetching the pipeline.");
-            }
-        };
-
-        fetchPipeline();
-    }, [id]);
-
     const handleSave = async () => {
-        const updatedPipeline: Pipeline = {
-            id,
+        const newPipeline: Pipeline = {
             name,
             createdAt: createdAt?.toISOString() || new Date().toISOString(),
             logs,
         };
 
         try {
-            const response = await apiFetch(`/api/pipelines/${id}`, {
-                method: "PUT",
+            const response = await apiFetch(`/api/pipelines`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(updatedPipeline),
+                body: JSON.stringify(newPipeline),
             });
 
             if (response.ok) {
                 navigate("/");
             } else {
-                setError("Failed to update pipeline. Please try again.");
+                console.error("Failed to create pipeline. Please try again.");
             }
         } catch (err) {
-            console.error("Error saving pipeline:", err);
-            setError("An error occurred while saving the pipeline.");
+            console.error("Error creating pipeline:", err);
         }
     };
 
@@ -127,43 +97,15 @@ const EditPipeline: React.FC = () => {
         setNewEntryStatus("");
     };
 
-    const handleRemoveLog = (logIndex: number) => {
-        const updatedLogs = logs.filter((_, index) => index !== logIndex);
-        setLogs(updatedLogs);
-    };
-
-    const handleLogChange = (index: number, field: keyof Log, value: string) => {
-        const updatedLogs = [...logs];
-        if (field === "entries") {
-            console.error("Cannot assign a string to entries, which is an array.");
-            return;
-        }
-        updatedLogs[index][field] = value as never;
-        setLogs(updatedLogs);
-    };
-
     const handleRemoveEntryFromNewLog = (entryIndex: number) => {
         const updatedEntries = newLogEntries.filter((_, index) => index !== entryIndex);
         setNewLogEntries(updatedEntries);
     };
 
-    if (error) {
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-                <Typography variant="h6" color="error">
-                    {error}
-                </Typography>
-            </Box>
-        );
-    }
-
-    if (!pipeline) {
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-                <CircularProgress />
-            </Box>
-        );
-    }
+    const handleRemoveLog = (logIndex: number) => {
+        const updatedLogs = logs.filter((_, index) => index !== logIndex);
+        setLogs(updatedLogs);
+    };
 
     return (
         <Box
@@ -177,7 +119,7 @@ const EditPipeline: React.FC = () => {
         >
             <Logo />
             <Typography variant="h4" component="h1" gutterBottom>
-                Edit Pipeline
+                Create Pipeline
             </Typography>
             <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <TextField
@@ -207,7 +149,7 @@ const EditPipeline: React.FC = () => {
                                 fullWidth
                                 margin="normal"
                                 value={log.description}
-                                onChange={(e) => handleLogChange(index, "description", e.target.value)}
+                                disabled
                             />
                             <IconButton
                                 edge="end"
@@ -310,4 +252,4 @@ const EditPipeline: React.FC = () => {
     );
 };
 
-export default EditPipeline;
+export default CreatePipeline;

@@ -43,11 +43,13 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/weatherforecast': {
-                target,
-                secure: false
-            }
+            '/api': {
+                target: 'https://100.87.158.113:7076',
+                changeOrigin: true,
+                secure: false,
+            },
         },
+        host: true,
         port: 5173,
         https: {
             key: fs.readFileSync('./certs/cert.key'),

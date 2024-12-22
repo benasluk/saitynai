@@ -18,13 +18,14 @@ interface Entry {
 const EntryList: React.FC = () => {
     const [entries, setEntries] = useState<Entry[]>([]);
     const [loading, setLoading] = useState(true);
+    const [roles, setRoles] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchEntries = async () => {
             try {
-                const response = await apiFetch("https://localhost:7076/api/entries/", {
+                const response = await apiFetch("/api/entries/", {
                     method: "GET",
                 });
 
@@ -42,6 +43,20 @@ const EntryList: React.FC = () => {
             }
         };
 
+        const fetchRoles = () => {
+            const token = localStorage.getItem("authToken");
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split(".")[1]));
+                    const userRoles = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || [];
+                    setRoles(Array.isArray(userRoles) ? userRoles : [userRoles]);
+                } catch (error) {
+                    console.error("Error parsing token payload:", error);
+                }
+            }
+        };
+
+        fetchRoles();
         fetchEntries();
     }, []);
 
@@ -92,37 +107,43 @@ const EntryList: React.FC = () => {
             <Paper elevation={3} style={{ padding: "1rem", margin: "0", width: "80%" }}>
                 <Header />
                 <List>
-                    <ListItem>
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => handleCreateEntry()}
-                        >
-                            Create new entry
-                        </Button>
-                    </ListItem>
+                    {roles.includes("Developer") && (
+                        <ListItem>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() => handleCreateEntry()}
+                            >
+                                Create new entry
+                            </Button>
+                        </ListItem>
+                    )}
                     {entries.map((entry) => (
                         <ListItem key={entry.id} divider>
                             <ListItemText
                                 primary={`Message: ${entry.message}`}
                                 secondary={`Status: ${entry.status} | Created At: ${new Date(entry.createdAt).toLocaleString()}`}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleEditEntry(entry.id)}
-                                sx={{ml: "10px"}}
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() => handleDeleteEntry(entry.id)}
-                                sx={{ml: "10px"}}
-                            >
-                                Delete
-                            </Button>
+                            {roles.includes("Developer") && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleEditEntry(entry.id)}
+                                    sx={{ml: "10px"}}
+                                >
+                                    Edit
+                                </Button>
+                            )}
+                            {roles.includes("Admin") && (
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => handleDeleteEntry(entry.id)}
+                                    sx={{ml: "10px"}}
+                                >
+                                    Delete
+                                </Button>
+                            )}
                         </ListItem>
                     ))}
                 </List>

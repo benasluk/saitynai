@@ -8,7 +8,7 @@ A CI/CD pipeline in your app collects and sends logs to this program, which stor
 
 Also funtions as a vault for old logs to see what had happened in the past.
 
-This project is set up for usage in a LAN and thus requires configuration for it to work properly. All the public IP adresses must be changed in order to start the project.
+This project is setup as a localhost project. It can simply be reconfigured for a cloud or LAN solution by editing `vite.config` for the frontend and `program.cs` for the backend.
 
 ### Program components
 This program has 3 main objects:

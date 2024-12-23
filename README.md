@@ -25,550 +25,734 @@ This project has three parts:
 2. Backend which uses dotnet c#
 3. PostgreSQL database
 
+### Architecture diagram
+
+![Deployment diagram](Plogger-deployment.png "Deployment diagram")
+
+### Wireframes
+
+#### Login page:
+
+Wireframe:
+
+![Login page wireframe](Plogger-Login.png "Login page wireframe")
+
+Result:
+
+![Login page real](Plogger-Login-Real.png "Login page real")
+
+#### Pipelines list page:
+
+Wireframe:
+
+![Pipelines list page wireframe](Plogger_Homepage.png "Pipelines list page wireframe")
+
+Result:
+
+![Pipelines list page real](Plogger-Homepage-Real.png "Pipelines list page real")
+
+#### Create Pipeline page:
+
+Wireframe:
+
+![Create Pipeline page wireframe](Plogger_CreatePipeline.png "Create Pipeline page wireframe")
+
+Result:
+
+![Create Pipeline page real](Plogger-CreatePipeline-Real.png "Create Pipeline page real")
+
+#### Edit Pipeline page:
+
+Wireframe:
+
+![Edit Pipeline page wireframe](Plogger_EditPipeline.png "Edit Pipeline page wireframe")
+
+Result:
+
+![Edit Pipeline page real](Plogger-EditPipeline-Real.png "Edit Pipeline page real")
+
+#### Delete Pipeline page:
+
+Wireframe:
+
+![Delete Pipeline page wireframe](Plogger_DeletePipeline.png "Delete Pipeline page wireframe")
+
+Result:
+
+![Delete Pipeline page real](Plogger-DeletePipeline-Real.png "Delete Pipeline page real")
+
+
 ### OpenAPI Documentation
 
-```
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | [/api/Entries](#getapientries) |  Gets list of entries |
+| POST | [/api/Entries](#postapientries) | Creates an entry |
+| GET | [/api/Entries/{id}](#getapientriesid) | Gets a single entry |
+| PUT | [/api/Entries/{id}](#putapientriesid) | Updates an entry |
+| DELETE | [/api/Entries/{id}](#deleteapientriesid) | Deletes an entry |
+| GET | [/api/Logs](#getapilogs) | Gets list of logs |
+| POST | [/api/Logs](#postapilogs) | Creates a log |
+| GET | [/api/Logs/{id}](#getapilogsid) | Gets a single log |
+| PUT | [/api/Logs/{id}](#putapilogsid) | Updates a log |
+| DELETE | [/api/Logs/{id}](#deleteapilogsid) | Deletes a log |
+| GET | [/api/Pipelines](#getapipipelines) | Gets list of pipelines |
+| POST | [/api/Pipelines](#postapipipelines) | Creates a pipeline |
+| GET | [/api/Pipelines/{id}](#getapipipelinesid) | Gets a single pipeline |
+| PUT | [/api/Pipelines/{id}](#putapipipelinesid) | Updates a pipeline |
+| DELETE | [/api/Pipelines/{id}](#deleteapipipelinesid) | Deletes a pipeline |
+| POST | [/api/accounts](#postapiaccounts) | Creates an user |
+| POST | [/api/login](#postapilogin) | Logins the user to the system |
+| POST | [/api/accessToken](#postapiaccesstoken) | Gets the access token |
+| POST | [/api/logout](#postapilogout) | Logs the user out of the system |
+
+
+## Path Details
+
+
+### [GET]/api/Entries
+
+#### Responses
+
+- 200 Success
+
+- 404 Not Found
+
+***
+
+### [POST]/api/Entries
+
+#### RequestBody
+
+- application/json
+
+```ts
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Plogger.Server",
-    "version": "1.0"
-  },
-  "paths": {
-    "/api/Entries": {
-      "get": {
-        "tags": [
-          "Entries"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Entries"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entry"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entry"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entry"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Content"
-          }
-        }
-      }
-    },
-    "/api/Entries/{id}": {
-      "get": {
-        "tags": [
-          "Entries"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Entries"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entry"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entry"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Entry"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "201": {
-            "description": "Created"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Content"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Entries"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/Logs": {
-      "get": {
-        "tags": [
-          "Logs"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Logs"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Log"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Log"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Log"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Content"
-          }
-        }
-      }
-    },
-    "/api/Logs/{id}": {
-      "get": {
-        "tags": [
-          "Logs"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Logs"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Log"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Log"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Log"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "201": {
-            "description": "Created"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Content"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Logs"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/Pipelines": {
-      "get": {
-        "tags": [
-          "Pipelines"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Pipelines"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Pipeline"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Pipeline"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Pipeline"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Content"
-          }
-        }
-      }
-    },
-    "/api/Pipelines/{id}": {
-      "get": {
-        "tags": [
-          "Pipelines"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Pipelines"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Pipeline"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Pipeline"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Pipeline"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "201": {
-            "description": "Created"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Content"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Pipelines"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Entry": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "logId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Log": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "pipelineId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "entries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Entry"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Pipeline": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "logs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Log"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      }
-    }
+  id?: string
+  logId?: string
+  message?: string
+  status?: integer
+  createdAt?: string
+  userId?: string
+  user: {
+    id?: string
+    userName?: string
+    normalizedUserName?: string
+    email?: string
+    normalizedEmail?: string
+    emailConfirmed?: boolean
+    passwordHash?: string
+    securityStamp?: string
+    concurrencyStamp?: string
+    phoneNumber?: string
+    phoneNumberConfirmed?: boolean
+    twoFactorEnabled?: boolean
+    lockoutEnd?: string
+    lockoutEnabled?: boolean
+    accessFailedCount?: integer
+    company?: string
   }
 }
 ```
+
+
+
+#### Responses
+
+- 200 Success
+
+- 400 Bad Request
+
+- 422 Unprocessable Content
+
+***
+
+### [GET]/api/Entries/{id}
+
+#### Responses
+
+- 200 Success
+
+- 404 Not Found
+
+***
+
+### [PUT]/api/Entries/{id}
+
+#### RequestBody
+
+- application/json
+
+```ts
+{
+  id?: string
+  logId?: string
+  message?: string
+  status?: integer
+  createdAt?: string
+  userId?: string
+  user: {
+    id?: string
+    userName?: string
+    normalizedUserName?: string
+    email?: string
+    normalizedEmail?: string
+    emailConfirmed?: boolean
+    passwordHash?: string
+    securityStamp?: string
+    concurrencyStamp?: string
+    phoneNumber?: string
+    phoneNumberConfirmed?: boolean
+    twoFactorEnabled?: boolean
+    lockoutEnd?: string
+    lockoutEnabled?: boolean
+    accessFailedCount?: integer
+    company?: string
+  }
+}
+```
+
+
+#### Responses
+
+- 200 Success
+
+- 201 Created
+
+- 400 Bad Request
+
+- 404 Not Found
+
+- 422 Unprocessable Content
+
+***
+
+### [DELETE]/api/Entries/{id}
+
+#### Responses
+
+- 204 No Content
+
+- 404 Not Found
+
+***
+
+### [GET]/api/Logs
+
+#### Responses
+
+- 200 Success
+
+***
+
+### [POST]/api/Logs
+
+#### RequestBody
+
+- application/json
+
+```ts
+{
+  id?: string
+  pipelineId?: string
+  description?: string
+  createdAt?: string
+  entries: {
+    id?: string
+    logId?: string
+    message?: string
+    status?: integer
+    createdAt?: string
+    userId?: string
+    user: {
+      id?: string
+      userName?: string
+      normalizedUserName?: string
+      email?: string
+      normalizedEmail?: string
+      emailConfirmed?: boolean
+      passwordHash?: string
+      securityStamp?: string
+      concurrencyStamp?: string
+      phoneNumber?: string
+      phoneNumberConfirmed?: boolean
+      twoFactorEnabled?: boolean
+      lockoutEnd?: string
+      lockoutEnabled?: boolean
+      accessFailedCount?: integer
+      company?: string
+    }
+  }[]
+  userId?: string
+  user:#/components/schemas/LoggerUser
+}
+```
+
+
+#### Responses
+
+- 200 Success
+
+- 400 Bad Request
+
+- 422 Unprocessable Content
+
+***
+
+### [GET]/api/Logs/{id}
+
+#### Responses
+
+- 200 Success
+
+- 404 Not Found
+
+***
+
+### [PUT]/api/Logs/{id}
+
+#### RequestBody
+
+- application/json
+
+```ts
+{
+  id?: string
+  pipelineId?: string
+  description?: string
+  createdAt?: string
+  entries: {
+    id?: string
+    logId?: string
+    message?: string
+    status?: integer
+    createdAt?: string
+    userId?: string
+    user: {
+      id?: string
+      userName?: string
+      normalizedUserName?: string
+      email?: string
+      normalizedEmail?: string
+      emailConfirmed?: boolean
+      passwordHash?: string
+      securityStamp?: string
+      concurrencyStamp?: string
+      phoneNumber?: string
+      phoneNumberConfirmed?: boolean
+      twoFactorEnabled?: boolean
+      lockoutEnd?: string
+      lockoutEnabled?: boolean
+      accessFailedCount?: integer
+      company?: string
+    }
+  }[]
+  userId?: string
+  user:#/components/schemas/LoggerUser
+}
+```
+
+#### Responses
+
+- 200 Success
+
+- 201 Created
+
+- 400 Bad Request
+
+- 404 Not Found
+
+- 422 Unprocessable Content
+
+***
+
+### [DELETE]/api/Logs/{id}
+
+#### Responses
+
+- 204 No Content
+
+- 404 Not Found
+
+***
+
+### [GET]/api/Pipelines
+
+#### Responses
+
+- 200 Success
+
+***
+
+### [POST]/api/Pipelines
+
+#### RequestBody
+
+- application/json
+
+```ts
+{
+  id?: string
+  name?: string
+  createdAt?: string
+  logs: {
+    id?: string
+    pipelineId?: string
+    description?: string
+    createdAt?: string
+    entries: {
+      id?: string
+      logId?: string
+      message?: string
+      status?: integer
+      createdAt?: string
+      userId?: string
+      user: {
+        id?: string
+        userName?: string
+        normalizedUserName?: string
+        email?: string
+        normalizedEmail?: string
+        emailConfirmed?: boolean
+        passwordHash?: string
+        securityStamp?: string
+        concurrencyStamp?: string
+        phoneNumber?: string
+        phoneNumberConfirmed?: boolean
+        twoFactorEnabled?: boolean
+        lockoutEnd?: string
+        lockoutEnabled?: boolean
+        accessFailedCount?: integer
+        company?: string
+      }
+    }[]
+    userId?: string
+    user:#/components/schemas/LoggerUser
+  }[]
+  userId?: string
+  user:#/components/schemas/LoggerUser
+}
+```
+
+#### Responses
+
+- 200 Success
+
+- 400 Bad Request
+
+- 422 Unprocessable Content
+
+***
+
+### [GET]/api/Pipelines/{id}
+
+#### Responses
+
+- 200 Success
+
+- 404 Not Found
+
+***
+
+### [PUT]/api/Pipelines/{id}
+
+#### RequestBody
+
+- application/json
+
+```ts
+{
+  id?: string
+  name?: string
+  createdAt?: string
+  logs: {
+    id?: string
+    pipelineId?: string
+    description?: string
+    createdAt?: string
+    entries: {
+      id?: string
+      logId?: string
+      message?: string
+      status?: integer
+      createdAt?: string
+      userId?: string
+      user: {
+        id?: string
+        userName?: string
+        normalizedUserName?: string
+        email?: string
+        normalizedEmail?: string
+        emailConfirmed?: boolean
+        passwordHash?: string
+        securityStamp?: string
+        concurrencyStamp?: string
+        phoneNumber?: string
+        phoneNumberConfirmed?: boolean
+        twoFactorEnabled?: boolean
+        lockoutEnd?: string
+        lockoutEnabled?: boolean
+        accessFailedCount?: integer
+        company?: string
+      }
+    }[]
+    userId?: string
+    user:#/components/schemas/LoggerUser
+  }[]
+  userId?: string
+  user:#/components/schemas/LoggerUser
+}
+```
+
+#### Responses
+
+- 200 Success
+
+- 201 Created
+
+- 400 Bad Request
+
+- 404 Not Found
+
+- 422 Unprocessable Content
+
+***
+
+### [DELETE]/api/Pipelines/{id}
+
+#### Responses
+
+- 200 Success
+
+- 404 Not Found
+
+***
+
+### [POST]/api/accounts
+
+#### RequestBody
+
+- application/json
+
+```ts
+{
+  userName?: string
+  email?: string
+  password?: string
+  company?: string
+  roles?: string[]
+}
+```
+
+#### Responses
+
+- 201 Created
+
+- 422 Unprocessable Content
+
+***
+
+### [POST]/api/login
+
+#### RequestBody
+
+- application/json
+
+```ts
+{
+  userName?: string
+  password?: string
+}
+```
+
+#### Responses
+
+- 200 Success
+
+- 422 Unprocessable Content
+
+***
+
+### [POST]/api/accessToken
+
+#### Responses
+
+- 201 Created
+
+- 422 Unprocessable Content
+
+***
+
+### [POST]/api/logout
+
+#### Responses
+
+- 201 Created
+
+- 422 Unprocessable Content
+
+## References
+
+### #/components/schemas/Entry
+
+```ts
+{
+  id?: string
+  logId?: string
+  message?: string
+  status?: integer
+  createdAt?: string
+  userId?: string
+  user: {
+    id?: string
+    userName?: string
+    normalizedUserName?: string
+    email?: string
+    normalizedEmail?: string
+    emailConfirmed?: boolean
+    passwordHash?: string
+    securityStamp?: string
+    concurrencyStamp?: string
+    phoneNumber?: string
+    phoneNumberConfirmed?: boolean
+    twoFactorEnabled?: boolean
+    lockoutEnd?: string
+    lockoutEnabled?: boolean
+    accessFailedCount?: integer
+    company?: string
+  }
+}
+```
+
+### #/components/schemas/Log
+
+```ts
+{
+  id?: string
+  pipelineId?: string
+  description?: string
+  createdAt?: string
+  entries: {
+    id?: string
+    logId?: string
+    message?: string
+    status?: integer
+    createdAt?: string
+    userId?: string
+    user: {
+      id?: string
+      userName?: string
+      normalizedUserName?: string
+      email?: string
+      normalizedEmail?: string
+      emailConfirmed?: boolean
+      passwordHash?: string
+      securityStamp?: string
+      concurrencyStamp?: string
+      phoneNumber?: string
+      phoneNumberConfirmed?: boolean
+      twoFactorEnabled?: boolean
+      lockoutEnd?: string
+      lockoutEnabled?: boolean
+      accessFailedCount?: integer
+      company?: string
+    }
+  }[]
+  userId?: string
+  user:#/components/schemas/LoggerUser
+}
+```
+
+### #/components/schemas/LoggerUser
+
+```ts
+{
+  id?: string
+  userName?: string
+  normalizedUserName?: string
+  email?: string
+  normalizedEmail?: string
+  emailConfirmed?: boolean
+  passwordHash?: string
+  securityStamp?: string
+  concurrencyStamp?: string
+  phoneNumber?: string
+  phoneNumberConfirmed?: boolean
+  twoFactorEnabled?: boolean
+  lockoutEnd?: string
+  lockoutEnabled?: boolean
+  accessFailedCount?: integer
+  company?: string
+}
+```
+
+### #/components/schemas/LoginDTO
+
+```ts
+{
+  userName?: string
+  password?: string
+}
+```
+
+### #/components/schemas/Pipeline
+
+```ts
+{
+  id?: string
+  name?: string
+  createdAt?: string
+  logs: {
+    id?: string
+    pipelineId?: string
+    description?: string
+    createdAt?: string
+    entries: {
+      id?: string
+      logId?: string
+      message?: string
+      status?: integer
+      createdAt?: string
+      userId?: string
+      user: {
+        id?: string
+        userName?: string
+        normalizedUserName?: string
+        email?: string
+        normalizedEmail?: string
+        emailConfirmed?: boolean
+        passwordHash?: string
+        securityStamp?: string
+        concurrencyStamp?: string
+        phoneNumber?: string
+        phoneNumberConfirmed?: boolean
+        twoFactorEnabled?: boolean
+        lockoutEnd?: string
+        lockoutEnabled?: boolean
+        accessFailedCount?: integer
+        company?: string
+      }
+    }[]
+    userId?: string
+    user:#/components/schemas/LoggerUser
+  }[]
+  userId?: string
+  user:#/components/schemas/LoggerUser
+}
+```
+
+### #/components/schemas/RegisterUserDTO
+
+```ts
+{
+  userName?: string
+  email?: string
+  password?: string
+  company?: string
+  roles?: string[]
+}
+```
+
+# Conclusion
+
+The project was a success, pipelines can be stored and viewed at any time. The only downside was the UI interface, because the project started as an api project and the UI part serves little purpose other than viewing the pipeline logs. Next time I would put more thought into planning an app that will have more features and think about a better cloud solution.

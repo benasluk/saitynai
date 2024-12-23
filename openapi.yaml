@@ -1,0 +1,503 @@
+openapi: 3.0.1
+info:
+  title: Plogger.Server
+  version: "1.0"
+servers:
+- url: /
+paths:
+  /api/Entries:
+    get:
+      tags:
+      - Entries
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+    post:
+      tags:
+      - Entries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "422":
+          description: Unprocessable Content
+  /api/Entries/{id}:
+    get:
+      tags:
+      - Entries
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - Entries
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+      responses:
+        "200":
+          description: Success
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Content
+    delete:
+      tags:
+      - Entries
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /api/Logs:
+    get:
+      tags:
+      - Logs
+      responses:
+        "200":
+          description: Success
+    post:
+      tags:
+      - Logs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Log'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "422":
+          description: Unprocessable Content
+  /api/Logs/{id}:
+    get:
+      tags:
+      - Logs
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - Logs
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Log'
+      responses:
+        "200":
+          description: Success
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Content
+    delete:
+      tags:
+      - Logs
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+  /api/Pipelines:
+    get:
+      tags:
+      - Pipelines
+      responses:
+        "200":
+          description: Success
+    post:
+      tags:
+      - Pipelines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pipeline'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Pipeline'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Pipeline'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "422":
+          description: Unprocessable Content
+  /api/Pipelines/{id}:
+    get:
+      tags:
+      - Pipelines
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - Pipelines
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pipeline'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Pipeline'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Pipeline'
+      responses:
+        "200":
+          description: Success
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Content
+    delete:
+      tags:
+      - Pipelines
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+  /api/accounts:
+    post:
+      tags:
+      - Plogger.Server
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserDTO'
+        required: true
+      responses:
+        "201":
+          description: Created
+        "422":
+          description: Unprocessable Content
+  /api/login:
+    post:
+      tags:
+      - Plogger.Server
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "422":
+          description: Unprocessable Content
+  /api/accessToken:
+    post:
+      tags:
+      - Plogger.Server
+      responses:
+        "201":
+          description: Created
+        "422":
+          description: Unprocessable Content
+  /api/logout:
+    post:
+      tags:
+      - Plogger.Server
+      responses:
+        "201":
+          description: Created
+        "422":
+          description: Unprocessable Content
+components:
+  schemas:
+    Entry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        logId:
+          type: string
+          format: uuid
+        message:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        userId:
+          type: string
+          nullable: true
+        user:
+          $ref: '#/components/schemas/LoggerUser'
+      additionalProperties: false
+    Log:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        pipelineId:
+          type: string
+          format: uuid
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        entries:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/Entry'
+        userId:
+          type: string
+          nullable: true
+        user:
+          $ref: '#/components/schemas/LoggerUser'
+      additionalProperties: false
+    LoggerUser:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        userName:
+          type: string
+          nullable: true
+        normalizedUserName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        normalizedEmail:
+          type: string
+          nullable: true
+        emailConfirmed:
+          type: boolean
+        passwordHash:
+          type: string
+          nullable: true
+        securityStamp:
+          type: string
+          nullable: true
+        concurrencyStamp:
+          type: string
+          nullable: true
+        phoneNumber:
+          type: string
+          nullable: true
+        phoneNumberConfirmed:
+          type: boolean
+        twoFactorEnabled:
+          type: boolean
+        lockoutEnd:
+          type: string
+          format: date-time
+          nullable: true
+        lockoutEnabled:
+          type: boolean
+        accessFailedCount:
+          type: integer
+          format: int32
+        company:
+          type: string
+          nullable: true
+      additionalProperties: false
+    LoginDTO:
+      type: object
+      properties:
+        userName:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Pipeline:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        logs:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/Log'
+        userId:
+          type: string
+          nullable: true
+        user:
+          $ref: '#/components/schemas/LoggerUser'
+      additionalProperties: false
+    RegisterUserDTO:
+      type: object
+      properties:
+        userName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+        company:
+          type: string
+          nullable: true
+        roles:
+          type: array
+          nullable: true
+          items:
+            type: string
+      additionalProperties: false
